@@ -64,7 +64,10 @@ public class RequestHandler{
 			FileInputStream fis = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			byte [] byteStream = new byte[(int) file.length()];
-
+			bis.read(byteStream, 0, byteStream.length);
+			RESPONSE_PHRASE = "OK";
+			RESPONSE_CODE = "200";
+			
 			logger.info("Buffering data");
 			return byteStream;
 		}
@@ -72,11 +75,28 @@ public class RequestHandler{
 			logger.error("Resource not found");
 			return null;
 		}
+		catch(IOException e){
+			logger.error("Error reading the file");
+			return null;
+		}
 	}
-	
+	public String generateHTML(File dir){
+		File[] files = dir.listFiles();
+		String body = "\r\n<html>\n<body>";
+		for(File file : files){
+			String fname = file.getName();
+			System.out.println(fname);
+			body = body + fname+"</br>";
+						
+		}
+		body = body + "\n</body>\n</html>";
+		System.out.println(body);
+		return body;
+		
+	}
 	public void generateGETresponse(){
 		byte[] initialLine = (VERSION + " " + RESPONSE_CODE + " " + RESPONSE_PHRASE+"\r\n").getBytes();
-		byte[] headerLine = ("Content-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\n").getBytes();
+		byte[] headerLine = ("Content-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
 		response = concatenateBytes(concatenateBytes(initialLine, headerLine), body);
 	}
 	
@@ -94,10 +114,16 @@ public class RequestHandler{
 			//check if resource is directory 
 			if(file.isDirectory()){
 				logger.info("Resource is directory"); //TO-DO
-				return null;
+				body = generateHTML(file).getBytes();
+				CONTENT_TYPE = "text/html; charset=utf-8";
+				CONTENT_LENGTH = String.valueOf(body.length);
+				RESPONSE_CODE = "200";
+				RESPONSE_PHRASE = "OK";
+				generateGETresponse();
+				return response;
 			}
 			else{
-				CONTENT_TYPE = getMimeType(path);
+				CONTENT_TYPE = getMimeType(path)+"; charset=utf-8";
 				//if mime is null, then file format not vlid
 				if(CONTENT_TYPE == null){
 					RESPONSE_CODE = "404";
@@ -106,8 +132,8 @@ public class RequestHandler{
 				    return null;
 				}
 				else{
-					logger.info("Mime type" + CONTENT_TYPE);
-					body =  getResource(file);
+					logger.info("Mime type: " + CONTENT_TYPE);
+					body =  concatenateBytes("\r\n".getBytes(),getResource(file));
 					CONTENT_LENGTH = String.valueOf(body.length);
 					generateGETresponse();
 					logger.info("Data buffered; writing to socket"); 

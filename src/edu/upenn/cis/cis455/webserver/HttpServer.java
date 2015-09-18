@@ -34,13 +34,18 @@ class HttpServer {
     	
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
     	if (args.length == 1){
-    		//TO-DO: Output full name and pennkey
-    		generateThreadPool(sharedQueue, null);
+    		// Output full name and pennkey
+    		System.out.println("Aayushi Dwivedi\naayushi");
+    		System.exit(-1);
     	}
     	else if (args.length == 2){
     		File file = new File(args[1]);
     		if(file.isDirectory()){
     			generateThreadPool(sharedQueue, args[1]);
+    		}
+    		else{
+    			System.out.println("Not a directory;Exiting.");
+    			System.exit(-1);
     		}
     	}
      

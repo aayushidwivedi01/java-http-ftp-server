@@ -63,7 +63,7 @@ public class ThreadPool extends Thread{
 		 requestHeaders = new HashMap<String,String>();
 		 requestHeaders.put("action", splitRequest[0]);
 		 requestHeaders.put("path", splitRequest[1]);
-		 requestHeaders.put("version", splitRequest[2]);
+		 VERSION =  splitRequest[2];
 		 
 		 	 
 		 System.out.println(request);
@@ -107,10 +107,12 @@ public class ThreadPool extends Thread{
 												
 						while((request = in.readLine()) != null){
 							  if(request.length() == 0){
-								  System.out.println(requestContent);
+								  System.out.println(request);
+								  //System.out.println(requestContent);
 								  parseRequestHeaders(requestContent.remove(0));  //TO-DO: add all headers in map
 								  break;
 							  }
+							  System.out.println(request);
 						  	  requestContent.add(request);
 							  //System.out.println(request);					  
 						  	}
@@ -122,7 +124,6 @@ public class ThreadPool extends Thread{
 						//Step 1: check if path is valid
 						switch(requestHeaders.get("action")){
 							case "GET":
-									if(HOME != null){ //args[1] present
 										String resourcePath = HOME + requestHeaders.get("path");
 										System.out.println(resourcePath);
 										logger.info("Building response");
@@ -130,8 +131,8 @@ public class ThreadPool extends Thread{
 										out.write(response);
 										logger.info("Done");
 										out.flush();
+										out.close();
 										
-									}
 									break;
 							case "HEAD":
 									System.out.println("TO DO");
