@@ -8,22 +8,37 @@ public class ResponseMessages {
 		return body;
 	}
 	
-	public byte[] getDIRhtml(File dir){
+	public byte[] getDIRhtml(File dir, String URL){
 		File[] files = dir.listFiles();
 		byte[] body;
 		String content = "\r\n<html>\n<body>";
-		for(File file : files){
+		for (File file : files){
 			String fname = file.getName();
-			System.out.println(fname);
-			content = content + fname+"</br>";
-						
+			content = content + "<a href=\""+ URL + "/" + fname + "\">" + fname + "</a></br>";
 		}
-		body = (content + "\n</body>\n</html>").getBytes();
-		System.out.println(body);
-		return body;
+		body = (content + "</body></html>").getBytes();
 		
+				
+		return body;
 	}
-
+	
+	public byte[] getCONTROLhtml(ThreadPool[] threadPool){
+		byte[] body;
+		String thState;
+		String content = "\r\n<html>\n<body>";
+		for (ThreadPool thName : threadPool){
+			content = content + thName.getName() ;
+			thState = String.valueOf(thName.getState());
+			if(thState.equals("RUNNABLE")){
+				content = content + " " + thState +  " " +  thName.getURL() + "</br>";
+			}
+			else{
+				content = content + " " + thState + "</br>";
+			}
+		}
+		body = (content+ "</body></html>").getBytes();
+		return body;
+	}
 	
 	
 

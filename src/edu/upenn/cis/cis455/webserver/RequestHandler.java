@@ -82,6 +82,7 @@ public class RequestHandler{
 	}
 	
 	
+	
 	public byte[] getResource(File file){
 		try{
 			FileInputStream fis = new FileInputStream(file);
@@ -127,7 +128,20 @@ public class RequestHandler{
 		System.arraycopy(second, 0, result, first.length, second.length);
 		return result;
 	}
-	public byte[] buildResponse(String path, String version, String action){
+	
+	public byte[] buildCONTROLresponse(ThreadPool[] threadPool, String version){
+		VERSION = version;
+		ResponseMessages responseMsgs = new ResponseMessages();
+		body = responseMsgs.getCONTROLhtml(threadPool);
+		CONTENT_TYPE = "text/html; charset=utf-8";
+		CONTENT_LENGTH = String.valueOf(body.length);
+		RESPONSE_CODE = "200";
+		RESPONSE_PHRASE = "OK";
+		getServerDate();
+		generateGETresponse();
+		return response;
+	}
+	public byte[] buildResponse(String path, String version, String action, String url){
 		ACTION = action;
 		VERSION = version;
 		File file = new File(path);
@@ -137,7 +151,7 @@ public class RequestHandler{
 			//check if resource is directory 
 			if(file.isDirectory()){
 				logger.info("Resource is directory"); //TO-DO
-				body = responseMsgs.getDIRhtml(file);
+				body = responseMsgs.getDIRhtml(file, url);
 				CONTENT_TYPE = "text/html; charset=utf-8";
 				CONTENT_LENGTH = String.valueOf(body.length);
 				RESPONSE_CODE = "200";

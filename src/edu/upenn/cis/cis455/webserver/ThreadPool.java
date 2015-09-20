@@ -36,15 +36,25 @@ public class ThreadPool extends Thread{
 	private String RESPONSE_PHRASE;
 	private String CONTENT_TYPE;
 	private String CONTENT_LENGTH;
+	private ThreadPool[] threadPool;
+	private String URL;
+	private int PORT_NO;
 	
 	
-	
-	
-	public ThreadPool(LinkedList<Socket>queue, String home){
+	public ThreadPool(LinkedList<Socket>queue, String home, ThreadPool[] threadPool, int portNo ){
+		
 		this.queue = queue;
+		this.threadPool = threadPool;
 		HOME = home;
+		PORT_NO = portNo;
+		URL = "http://localhost:" + String.valueOf(PORT_NO) + "URLNotFormedYet";
+		
 	}
 	
+public String getURL() {
+		return URL;
+	}
+
 /**
  	[GET /hello HTTP/1.1, 
 	Host: localhost:8080, 
@@ -56,7 +66,7 @@ public class ThreadPool extends Thread{
 **/
 
 	  
-	//TO-D: Modify the function to iterate through entire request payload
+	
 	private  void parseRequestHeaders(String request){
 		 logger.info("[Output from log4j] Parsing request..");
 		  
@@ -67,13 +77,7 @@ public class ThreadPool extends Thread{
 		 VERSION =  splitRequest[2];
 	 }	
 	
-	private void parseRequestBody(ArrayList<String> request){
-		logger.info("[Output from log4j] Parsing request body");
-		for(String req : request){
-			String[] pair = req.split(":", 2);
-			requestBody.put(pair[0], pair[1]);
-		}
-	}
+	
 	public void run()
 	{
 		while(true){
@@ -119,14 +123,26 @@ public class ThreadPool extends Thread{
 						switch(ACTION){
 							case "GET":
 										RequestHandler requestHandler = new RequestHandler();
-										String resourcePath = HOME + PATH;
-										System.out.println(resourcePath);
-										logger.info("Building response");
-										response = requestHandler.buildResponse(resourcePath, VERSION, ACTION);
-										out.write(response);
-										logger.info("Done");
-										out.flush();
-										out.close();
+										if(PATH.equals("/control")){
+											URL = "http://localhost:" + String.valueOf(PORT_NO) +PATH;
+											logger.info("Building CONTROL response");
+											response = requestHandler.buildCONTROLresponse(threadPool, VERSION);
+											out.write(response);
+											logger.info("Done");
+											out.flush();
+											out.close();
+										}
+										else{
+											URL = "http://localhost:" + PORT_NO +PATH;
+											String resourcePath = HOME + PATH;
+											System.out.println(resourcePath);
+											logger.info("Building response");
+											response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
+											out.write(response);
+											logger.info("Done");
+											out.flush();
+											out.close();
+										}
 										
 									break;
 							case "HEAD":

@@ -17,20 +17,21 @@ import org.apache.log4j.Logger;
 class HttpServer {
 	static final Logger logger = Logger.getLogger(HttpServer.class);
 	private static int MAX_POOL_SIZE = 5;
+	private static int portNumber;
 	private static ThreadPool[] threadPool = new ThreadPool[MAX_POOL_SIZE];
 
     public static void generateThreadPool(LinkedList<Socket> sharedQueue, String home){
     	logger.info("[Output from log4j] Creating thread pool");
     	for(int i = 0; i < MAX_POOL_SIZE; i++){
-    		threadPool[i] = new ThreadPool(sharedQueue, home);
+    		threadPool[i] = new ThreadPool(sharedQueue, home, threadPool, portNumber);
+    		threadPool[i].setName("Thread"+i);
+    		
     		threadPool[i].start();
     	}
     	logger.info("[Output from log4j] Thread pool ready");
     }
  
     public static void main(String args[]){
-    	
-    	
     	
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
     	if (args.length <= 1){
@@ -39,6 +40,7 @@ class HttpServer {
     		System.exit(-1);
     	}
     	else if (args.length == 2){
+    		portNumber = Integer.parseInt(args[0]);
     		File file = new File(args[1]);
     		if(file.isDirectory()){
     			generateThreadPool(sharedQueue, args[1]);
@@ -49,7 +51,7 @@ class HttpServer {
     		}
     	}
      
-      	int portNumber = Integer.parseInt(args[0]);
+      	
       	try{
       		ServerSocket serverSocket = new ServerSocket(portNumber);
       		//keep listening

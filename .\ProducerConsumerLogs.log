@@ -4077,3 +4077,558 @@ Client socket added to sharedQueue
 [Output from log4j] Processing a request
 [Output from log4j] Parsing request..
 [Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/gif; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/gif; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource does not exist
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/png; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/png; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/png; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/png; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/jpeg; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+Building response
+Resource path correct
+Mime type: image/jpeg; charset=utf-8
+Buffering data
+Data buffered; writing to socket
+Done
+[Output from log4j] sharedQueue empty; No new requests
