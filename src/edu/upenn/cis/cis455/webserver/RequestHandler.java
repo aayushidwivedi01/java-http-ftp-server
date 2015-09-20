@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
@@ -22,10 +25,31 @@ public class RequestHandler{
 	private String RESPONSE_PHRASE;
 	private String CONTENT_TYPE;
 	private String CONTENT_LENGTH;
+	private String SERVER_DATE;
+	private String LAST_MODIFIED;
 	private String ACTION;
 	private String PATH;
 	private String VERSION;
 	
+	
+	
+	public boolean isValidPath(File file){
+		
+		try{
+			if(file.exists()){
+				return true;
+			}
+			else {
+				return false;
+			}
+				}
+		catch(SecurityException e){
+			System.out.println("Forbidden Access");  // Is this a 404?
+			return false;
+		}
+	
+	}
+
 	
 	
 	public String getMimeType(String resourcePath) {
@@ -41,23 +65,22 @@ public class RequestHandler{
 		
 	}
 	
-	
-	public boolean isValidPath(File file){
+	public void getServerDate(){
 		
-		try{
-			if(file.exists()){
-				return true;
-			}
-			else {
-				return false;
-			}
-				}
-		catch(SecurityException se){
-			System.out.println("Forbidden Access");  // Is this a 404?
-			return false;
-		}
-	
+		SimpleDateFormat sdf =  new SimpleDateFormat("D, dd MMM yyyy HH:mm:ss z");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		Date currDate = new Date();
+		SERVER_DATE =  sdf.format(currDate);
 	}
+	
+	public void getLastModified(File file){
+	
+		SimpleDateFormat sdf =  new SimpleDateFormat("D, dd MMM yyyy HH:mm:ss z");
+		TimeZone oldZone = sdf.getTimeZone();
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		LAST_MODIFIED =  sdf.format(file.lastModified());
+	}
+	
 	
 	public byte[] getResource(File file){
 		try{
@@ -73,31 +96,29 @@ public class RequestHandler{
 		}
 		catch(FileNotFoundException e){
 			logger.error("Resource not found");
+			RESPONSE_CODE = "404";
+			RESPONSE_PHRASE = "Not Found";
+			
 			return null;
 		}
 		catch(IOException e){
 			logger.error("Error reading the file");
+			RESPONSE_CODE = "500";
+			RESPONSE_PHRASE = "Server Error";
 			return null;
 		}
 	}
-	public String generateHTML(File dir){
-		File[] files = dir.listFiles();
-		String body = "\r\n<html>\n<body>";
-		for(File file : files){
-			String fname = file.getName();
-			System.out.println(fname);
-			body = body + fname+"</br>";
-						
-		}
-		body = body + "\n</body>\n</html>";
-		System.out.println(body);
-		return body;
-		
-	}
+	
 	public void generateGETresponse(){
 		byte[] initialLine = (VERSION + " " + RESPONSE_CODE + " " + RESPONSE_PHRASE+"\r\n").getBytes();
-		byte[] headerLine = ("Content-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
+		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
 		response = concatenateBytes(concatenateBytes(initialLine, headerLine), body);
+	}
+	
+	public void generateHEADresponse(){
+		byte[] initialLine = (VERSION + " " + RESPONSE_CODE + " " + RESPONSE_PHRASE+"\r\n").getBytes();
+		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
+		response = concatenateBytes(initialLine, headerLine);
 	}
 	
 	public byte[] concatenateBytes(byte[] first, byte[] second){
@@ -106,20 +127,30 @@ public class RequestHandler{
 		System.arraycopy(second, 0, result, first.length, second.length);
 		return result;
 	}
-	public byte[] buildResponse(String path, String version){
+	public byte[] buildResponse(String path, String version, String action){
+		ACTION = action;
 		VERSION = version;
 		File file = new File(path);
+		ResponseMessages responseMsgs = new ResponseMessages();
 		if (isValidPath(file)){
 			logger.info("Resource path correct");
 			//check if resource is directory 
 			if(file.isDirectory()){
 				logger.info("Resource is directory"); //TO-DO
-				body = generateHTML(file).getBytes();
+				body = responseMsgs.getDIRhtml(file);
 				CONTENT_TYPE = "text/html; charset=utf-8";
 				CONTENT_LENGTH = String.valueOf(body.length);
 				RESPONSE_CODE = "200";
 				RESPONSE_PHRASE = "OK";
-				generateGETresponse();
+				getLastModified(file);
+				getServerDate();
+				if( ACTION.equalsIgnoreCase("GET")){
+					generateGETresponse();
+				}
+				
+				else if( ACTION.equalsIgnoreCase("HEAD")){
+					generateHEADresponse();
+				}
 				return response;
 			}
 			else{
@@ -128,18 +159,49 @@ public class RequestHandler{
 				if(CONTENT_TYPE == null){
 					RESPONSE_CODE = "404";
 					RESPONSE_PHRASE = "Not Found";
+					getServerDate();
+					body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);
+					CONTENT_LENGTH = String.valueOf(body.length);
+					if( ACTION.equalsIgnoreCase("GET")){
+						generateGETresponse();
+					}
+					
+					else if( ACTION.equalsIgnoreCase("HEAD")){
+						generateHEADresponse();
+					}
 				    logger.error("File format not supported");
-				    return null;
+				    return response;
 				}
 				else{
 					logger.info("Mime type: " + CONTENT_TYPE);
 					body =  concatenateBytes("\r\n".getBytes(),getResource(file));
+					getLastModified(file);
+					getServerDate();
 					CONTENT_LENGTH = String.valueOf(body.length);
-					generateGETresponse();
-					logger.info("Data buffered; writing to socket"); 
-					return response;
-					
-					
+					if(body != null){
+						if( ACTION.equalsIgnoreCase("GET")){
+							generateGETresponse();
+						}
+						
+						else if( ACTION.equalsIgnoreCase("HEAD")){
+							generateHEADresponse();
+						}
+						logger.info("Data buffered; writing to socket"); 
+						return response;
+					}
+					else{
+						body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);
+						getServerDate();
+						if( ACTION.equalsIgnoreCase("GET")){
+							generateGETresponse();
+						}
+						
+						else if( ACTION.equalsIgnoreCase("HEAD")){
+							generateHEADresponse();
+						}
+						logger.info("Writing ERROR msg to socket"); 
+						return response;
+					}
 				}
 				
 			}
@@ -148,7 +210,17 @@ public class RequestHandler{
 			logger.error("Resource does not exist");
 			RESPONSE_CODE = "404";
 			RESPONSE_PHRASE = "Not Found";
-			return null; //TO-DO. Not correct
-		}
+			getServerDate();
+			body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);;
+			CONTENT_LENGTH = String.valueOf(body.length);
+			if( ACTION.equalsIgnoreCase("GET")){
+				generateGETresponse();
+			}
+			
+			else if( ACTION.equalsIgnoreCase("HEAD")){
+				generateHEADresponse();
+			}
+			return response; 
+			}
 	}
 }

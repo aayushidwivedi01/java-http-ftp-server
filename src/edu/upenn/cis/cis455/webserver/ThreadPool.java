@@ -26,11 +26,12 @@ public class ThreadPool extends Thread{
 	private LinkedList<Socket>queue;
 	private final String HOME;
 	private Map<String, String> requestBody;
-	private  Map<String, String> requestHeaders;
 	private FileInputStream fis;
 	private BufferedInputStream bis;
 	private File file;
 	private String VERSION;
+	private String ACTION;
+	private String PATH;
 	private String RESPONSE_CODE;
 	private String RESPONSE_PHRASE;
 	private String CONTENT_TYPE;
@@ -60,14 +61,10 @@ public class ThreadPool extends Thread{
 		 logger.info("[Output from log4j] Parsing request..");
 		  
 		 String[] splitRequest = request.split(" ");
-		 requestHeaders = new HashMap<String,String>();
-		 requestHeaders.put("action", splitRequest[0]);
-		 requestHeaders.put("path", splitRequest[1]);
-		 VERSION =  splitRequest[2];
 		 
-		 	 
-		 System.out.println(request);
-		 System.out.println(requestHeaders);
+		 ACTION = splitRequest[0];
+		 PATH = splitRequest[1];
+		 VERSION =  splitRequest[2];
 	 }	
 	
 	private void parseRequestBody(ArrayList<String> request){
@@ -87,7 +84,7 @@ public class ThreadPool extends Thread{
 						queue.wait();
 					}
 					catch(InterruptedException e){
-						logger.error("Interrupted thread while waiting on sharedQueue");
+						logger.error("Interrupted thread while waiting on sharedQueue", e);
 						RESPONSE_CODE = "404";
 						RESPONSE_PHRASE = "Not Found";
 						
@@ -117,17 +114,15 @@ public class ThreadPool extends Thread{
 							  //System.out.println(request);					  
 						  	}
 						System.out.println("Handling request");
-						
-						RequestHandler requestHandler = new RequestHandler();
-						
-						logger.info("Created request handler");
+	
 						//Step 1: check if path is valid
-						switch(requestHeaders.get("action")){
+						switch(ACTION){
 							case "GET":
-										String resourcePath = HOME + requestHeaders.get("path");
+										RequestHandler requestHandler = new RequestHandler();
+										String resourcePath = HOME + PATH;
 										System.out.println(resourcePath);
 										logger.info("Building response");
-										response = requestHandler.buildResponse(resourcePath, VERSION);
+										response = requestHandler.buildResponse(resourcePath, VERSION, ACTION);
 										out.write(response);
 										logger.info("Done");
 										out.flush();
@@ -145,7 +140,7 @@ public class ThreadPool extends Thread{
 								
 					}
 					catch(Exception e){
-						logger.error("Interrupted thread while processing request");
+						logger.error("Interrupted thread while processing request", e);
 					}
 				}
 			}

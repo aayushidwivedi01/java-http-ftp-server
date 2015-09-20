@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 
 class HttpServer {
 	static final Logger logger = Logger.getLogger(HttpServer.class);
-	private static int MAX_POOL_SIZE = 100;
+	private static int MAX_POOL_SIZE = 5;
 	private static ThreadPool[] threadPool = new ThreadPool[MAX_POOL_SIZE];
 
     public static void generateThreadPool(LinkedList<Socket> sharedQueue, String home){
@@ -33,7 +33,7 @@ class HttpServer {
     	
     	
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
-    	if (args.length == 1){
+    	if (args.length <= 1){
     		// Output full name and pennkey
     		System.out.println("Aayushi Dwivedi\naayushi");
     		System.exit(-1);
@@ -67,9 +67,11 @@ class HttpServer {
 		  
 	  }
 	  catch(Exception e){
-		logger.error("Interrupt Exception in daemon thread.");
+		logger.error("Interrupt Exception in daemon thread.",e);
+		System.out.println(e.getMessage());
 		System.exit(-1);
 	  }
+      
 	  
   }
   
