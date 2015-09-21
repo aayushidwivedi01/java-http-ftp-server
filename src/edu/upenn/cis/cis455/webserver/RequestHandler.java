@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -30,21 +31,38 @@ public class RequestHandler{
 	private String ACTION;
 	private String PATH;
 	private String VERSION;
+	private Map<String, String> otherHeaders = new HashMap<>();
 	
+	public RequestHandler(Map<String,String> otherHeaders){
+		this.otherHeaders = otherHeaders;
+	}
 	
 	
 	public boolean isValidPath(File file){
 		
 		try{
 			if(file.exists()){
-				return true;
+				if (file.canRead()){
+					return true;
+					}
+				else {
+					logger.error("Forbidden Access; Requested resource cannot be accessed");  
+					RESPONSE_CODE = "403";
+					RESPONSE_PHRASE = "Forbidden";
+					return false;
+				}
 			}
 			else {
+				logger.error("File not found; Requested resource does not exist;");
+				RESPONSE_CODE = "404";
+				RESPONSE_PHRASE = "Not Found";
 				return false;
 			}
 				}
 		catch(SecurityException e){
-			System.out.println("Forbidden Access");  // Is this a 404?
+			logger.error("Forbidden Access; Requested resource cannot be accessed");  
+			RESPONSE_CODE = "403";
+			RESPONSE_PHRASE = "Forbidden";
 			return false;
 		}
 	
@@ -131,6 +149,9 @@ public class RequestHandler{
 	
 	public byte[] buildCONTROLresponse(ThreadPool[] threadPool, String version){
 		VERSION = version;
+		if((response = isBADRequest()) != null){
+			return response;
+		}
 		ResponseMessages responseMsgs = new ResponseMessages();
 		body = responseMsgs.getCONTROLhtml(threadPool);
 		CONTENT_TYPE = "text/html; charset=utf-8";
@@ -141,9 +162,43 @@ public class RequestHandler{
 		generateGETresponse();
 		return response;
 	}
+	
+	public byte[] buildSHUTDOWNresponse(ThreadPool[] threadPool, String version){
+		VERSION = version;
+		if((response = isBADRequest()) != null){
+			return response;
+		}
+		ResponseMessages responseMsgs = new ResponseMessages();
+		body = responseMsgs.getSHUTDOWNhtml();
+		CONTENT_TYPE = "text/html; charset=utf-8";
+		CONTENT_LENGTH = String.valueOf(body.length);
+		RESPONSE_CODE = "200";
+		RESPONSE_PHRASE = "OK";
+		getServerDate();
+		generateGETresponse();
+		return response;
+	}
+	
+	public byte[] isBADRequest(){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+			RESPONSE_CODE = "400";
+			RESPONSE_PHRASE = "Bad Request";
+			CONTENT_TYPE = "text/html; charset=utf-8";
+			ResponseMessages responseMsgs = new ResponseMessages();
+			body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);
+			CONTENT_LENGTH = String.valueOf(body.length);
+			getServerDate();
+			generateGETresponse();
+			return response;
+		}
+		return null;
+	}
 	public byte[] buildResponse(String path, String version, String action, String url){
 		ACTION = action;
 		VERSION = version;
+		if((response = isBADRequest()) != null){
+			return response;
+		}
 		File file = new File(path);
 		ResponseMessages responseMsgs = new ResponseMessages();
 		if (isValidPath(file)){
@@ -221,12 +276,10 @@ public class RequestHandler{
 			}
 		}
 		else{
-			logger.error("Resource does not exist");
-			RESPONSE_CODE = "404";
-			RESPONSE_PHRASE = "Not Found";
 			getServerDate();
-			body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);;
+			body = responseMsgs.getERRORhtml(RESPONSE_CODE, RESPONSE_PHRASE);
 			CONTENT_LENGTH = String.valueOf(body.length);
+			CONTENT_TYPE = "text/html; charset=utf-8";
 			if( ACTION.equalsIgnoreCase("GET")){
 				generateGETresponse();
 			}

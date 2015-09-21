@@ -1,18 +1,9 @@
 package edu.upenn.cis.cis455.webserver;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,24 +16,21 @@ public class ThreadPool extends Thread{
 	static final Logger logger = Logger.getLogger(ThreadPool.class); 
 	private LinkedList<Socket>queue;
 	private final String HOME;
-	private Map<String, String> requestBody;
-	private FileInputStream fis;
-	private BufferedInputStream bis;
-	private File file;
+	private Map<String, String> otherHeaders = new HashMap<>();
 	private String VERSION;
 	private String ACTION;
 	private String PATH;
-	private String RESPONSE_CODE;
-	private String RESPONSE_PHRASE;
-	private String CONTENT_TYPE;
-	private String CONTENT_LENGTH;
 	private ThreadPool[] threadPool;
 	private String URL;
-	private int PORT_NO;
+	private static int PORT_NO;
+	private static volatile boolean STOP = false;
 	
 	
+	public static int getPORT_NO() {
+		return PORT_NO;
+	}
+
 	public ThreadPool(LinkedList<Socket>queue, String home, ThreadPool[] threadPool, int portNo ){
-		
 		this.queue = queue;
 		this.threadPool = threadPool;
 		HOME = home;
@@ -54,7 +42,9 @@ public class ThreadPool extends Thread{
 public String getURL() {
 		return URL;
 	}
-
+public static boolean getSTOP(){	
+		return STOP;
+	}
 /**
  	[GET /hello HTTP/1.1, 
 	Host: localhost:8080, 
@@ -67,20 +57,33 @@ public String getURL() {
 
 	  
 	
-	private  void parseRequestHeaders(String request){
+	private  void parseRequestHeaders(String mainRequest, ArrayList<String> otherRequests){
 		 logger.info("[Output from log4j] Parsing request..");
 		  
-		 String[] splitRequest = request.split(" ");
+		 String[] splitRequest = mainRequest.split(" ");
 		 
 		 ACTION = splitRequest[0];
 		 PATH = splitRequest[1];
 		 VERSION =  splitRequest[2];
+		 
+		 
+		 for( String req : otherRequests){
+			 String[] pair = req.split(":", 2);
+			 
+			 otherHeaders.put(pair[0], pair[1]);
+		 }
+		 System.out.println(otherHeaders);
+		 
+		 
+		 
 	 }	
+	
+
 	
 	
 	public void run()
 	{
-		while(true){
+		while(!STOP){
 			synchronized(queue){
 				if(queue.isEmpty()){
 					try{
@@ -88,9 +91,14 @@ public String getURL() {
 						queue.wait();
 					}
 					catch(InterruptedException e){
-						logger.error("Interrupted thread while waiting on sharedQueue", e);
-						RESPONSE_CODE = "404";
-						RESPONSE_PHRASE = "Not Found";
+						if(STOP){
+							logger.info("Exiting " + Thread.currentThread().getName());
+							break;
+						}
+						else{
+							
+							logger.error("Interrupted" + Thread.currentThread().getName() + "while waiting on sharedQueue", e);
+						}
 						
 					}
 				}
@@ -102,52 +110,87 @@ public String getURL() {
 						ArrayList<String>requestContent = new ArrayList();
 						
 						Socket clientSocket = queue.removeFirst();
-					    //PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-						OutputStream out = clientSocket.getOutputStream();
+					   	OutputStream out = clientSocket.getOutputStream();
 						BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 												
 						while((request = in.readLine()) != null){
 							  if(request.length() == 0){
-								  System.out.println(request);
-								  //System.out.println(requestContent);
-								  parseRequestHeaders(requestContent.remove(0));  //TO-DO: add all headers in map
+								  String mainRequest = requestContent.remove(0);
+								  parseRequestHeaders(mainRequest, requestContent);
 								  break;
 							  }
 							  System.out.println(request);
 						  	  requestContent.add(request);
-							  //System.out.println(request);					  
+							 				  
 						  	}
 						System.out.println("Handling request");
-	
-						//Step 1: check if path is valid
+						
+						RequestHandler requestHandler = new RequestHandler(otherHeaders);
+						
 						switch(ACTION){
 							case "GET":
-										RequestHandler requestHandler = new RequestHandler();
-										if(PATH.equals("/control")){
-											URL = "http://localhost:" + String.valueOf(PORT_NO) +PATH;
-											logger.info("Building CONTROL response");
-											response = requestHandler.buildCONTROLresponse(threadPool, VERSION);
-											out.write(response);
-											logger.info("Done");
-											out.flush();
-											out.close();
-										}
-										else{
-											URL = "http://localhost:" + PORT_NO +PATH;
-											String resourcePath = HOME + PATH;
-											System.out.println(resourcePath);
-											logger.info("Building response");
-											response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
-											out.write(response);
-											logger.info("Done");
-											out.flush();
-											out.close();
-										}
+								if(PATH.equalsIgnoreCase("/control")){
+									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+									}
 										
+									URL = "http://localhost:" + String.valueOf(PORT_NO) +PATH;
+									logger.info("Building CONTROL response");
+									response = requestHandler.buildCONTROLresponse(threadPool, VERSION);
+									out.write(response);
+									logger.info("Done");
+									out.flush();
+									out.close();
+								}
+								else if (PATH.equalsIgnoreCase("/shutdown")){
+									
+									logger.info("Preparing to shutdown the server");
+									response = requestHandler.buildSHUTDOWNresponse(threadPool, VERSION);
+									out.write(response);
+									out.flush();
+									out.close();
+									STOP = true;
+									logger.info("Shutdown initiated by " + Thread.currentThread().getName());
+									for (Thread th : threadPool){
+										String state = String.valueOf(th.getState());
+										if(!state.equalsIgnoreCase("RUNNABLE")){
+											th.interrupt();
+										}
+								
+									}
+									HttpServer.getServerSocket().close();
 									break;
+								}
+								else{
+									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+									}
+									URL = "http://localhost:" + PORT_NO +PATH;
+									String resourcePath = HOME + PATH;
+									System.out.println(resourcePath);
+									logger.info("Building response");
+									response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
+									out.write(response);
+									logger.info("Done");
+									out.flush();
+									out.close();
+								}
+										
+								break;
 							case "HEAD":
-									System.out.println("TO DO");
-									break;
+								if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+								}
+								URL = "http://localhost:" + PORT_NO +PATH;
+								String resourcePath = HOME + PATH;
+								System.out.println(resourcePath);
+								logger.info("Building response");
+								response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
+								out.write(response);
+								logger.info("Done");
+								out.flush();
+								out.close();
+								break;
 							case "POST":
 								System.out.println("Milestone 2");
 								break;
@@ -155,11 +198,22 @@ public String getURL() {
 							
 								
 					}
+					
 					catch(Exception e){
+						if (STOP){
+							logger.info("Exiting "+ Thread.currentThread().getName());
+						}
+						else{
 						logger.error("Interrupted thread while processing request", e);
+						}
 					}
 				}
 			}
 		}
+		
+		
+		
 	}
+
+	
 }

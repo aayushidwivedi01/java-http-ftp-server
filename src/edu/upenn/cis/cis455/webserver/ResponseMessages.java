@@ -25,7 +25,7 @@ public class ResponseMessages {
 	public byte[] getCONTROLhtml(ThreadPool[] threadPool){
 		byte[] body;
 		String thState;
-		String content = "\r\n<html>\n<body>";
+		String content = "\r\n<html>\n<body> <h1> Control Panel </h1> <h2> Aayushi Dwivedi</h2> <h2> aayushi </h2><p>";
 		for (ThreadPool thName : threadPool){
 			content = content + thName.getName() ;
 			thState = String.valueOf(thName.getState());
@@ -36,7 +36,15 @@ public class ResponseMessages {
 				content = content + " " + thState + "</br>";
 			}
 		}
-		body = (content+ "</body></html>").getBytes();
+		body = (content+ "</p><p><a href=\"http://localhost:" +ThreadPool.getPORT_NO()+"/shutdown \"> SHUTDOWN SERVER</a></body></html>").getBytes();
+		return body;
+	}
+	
+	public byte[] getSHUTDOWNhtml(){
+		byte[] body;
+		String thState;
+		String content = "\r\n<html>\n<body> <h1>Shutting Down Server</br> Goodbye!</h1></body></html>";
+		body = content.getBytes();
 		return body;
 	}
 	

@@ -19,6 +19,8 @@ class HttpServer {
 	private static int MAX_POOL_SIZE = 5;
 	private static int portNumber;
 	private static ThreadPool[] threadPool = new ThreadPool[MAX_POOL_SIZE];
+	private static volatile boolean STOP = false;
+	private static ServerSocket serverSocket;
 
     public static void generateThreadPool(LinkedList<Socket> sharedQueue, String home){
     	logger.info("[Output from log4j] Creating thread pool");
@@ -31,7 +33,11 @@ class HttpServer {
     	logger.info("[Output from log4j] Thread pool ready");
     }
  
-    public static void main(String args[]){
+    public static ServerSocket getServerSocket() {
+		return serverSocket;
+	}
+
+	public static void main(String args[]){
     	
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
     	if (args.length <= 1){
@@ -53,9 +59,9 @@ class HttpServer {
      
       	
       	try{
-      		ServerSocket serverSocket = new ServerSocket(portNumber);
+      		serverSocket = new ServerSocket(portNumber);
       		//keep listening
-      		while(true){
+      		while(!ThreadPool.getSTOP()){
 			  
       			Socket clientSocket = serverSocket.accept();
 		  
@@ -66,11 +72,24 @@ class HttpServer {
       				sharedQueue.notify();
       			} 
       		}
+      		System.out.println("Main thread exiting");
 		  
 	  }
 	  catch(Exception e){
-		logger.error("Interrupt Exception in daemon thread.",e);
-		System.out.println(e.getMessage());
+		if(ThreadPool.getSTOP()){
+			for( Thread th : threadPool){
+				try {
+					th.join();
+				} catch (InterruptedException e1) {
+					logger.error("Unable to join thread" + th.getName());
+				}
+			}
+		}
+		else{
+			logger.error("Interrupt Exception in daemon thread.\n",e);
+			
+		}
+		
 		System.exit(-1);
 	  }
       
