@@ -1,4 +1,13 @@
 package edu.upenn.cis.cis455.webserver;
+/**
+ * Parses incoming request;
+ * Differentiates between request type
+ * Responds to client's request
+ * @param queue containing client sockets
+ * @param home directory of server
+ * @param threadPool object reference
+ * @param port number the server is listening at
+ */
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -97,7 +106,7 @@ public static boolean getSTOP(){
 						}
 						else{
 							
-							logger.error("Interrupted" + Thread.currentThread().getName() + "while waiting on sharedQueue", e);
+							logger.error("[ERROR] Interrupted" + Thread.currentThread().getName() + "while waiting on sharedQueue", e);
 						}
 						
 					}
@@ -204,7 +213,7 @@ public static boolean getSTOP(){
 							logger.info("Exiting "+ Thread.currentThread().getName());
 						}
 						else{
-						logger.error("Interrupted thread while processing request", e);
+						logger.error("[ERROR] Interrupted thread while processing request", e);
 						}
 					}
 				}

@@ -87,6 +87,7 @@
                 <include name="*.jar"/>
             </fileset>
         </copy>
+    	<copy file="${src.main.dir}${file.separator}log4j.properties" tofile="${classes.dir}${file.separator}log4j.properties" overwrite="true"/>
         <antcall target="compilejavatest" />
         <jar destfile="${test-lib.dir}${file.separator}webserver-test.jar" update="true">
             <fileset dir="${test-classes.dir}">

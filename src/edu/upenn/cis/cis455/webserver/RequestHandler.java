@@ -1,5 +1,10 @@
 package edu.upenn.cis.cis455.webserver;
-
+/*
+ * Main request handler
+ * Validates requests; Processes requests;
+ * Generates response
+ * @param All Headers excluding the first request header
+ */
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +13,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +24,6 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 public class RequestHandler{
-	//private final Map<String,String> requestHeader;
 	static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private byte[] body;
@@ -27,17 +33,17 @@ public class RequestHandler{
 	private String CONTENT_TYPE;
 	private String CONTENT_LENGTH;
 	private String SERVER_DATE;
-	private String LAST_MODIFIED;
+	private Date LAST_MODIFIED;
 	private String ACTION;
-	private String PATH;
 	private String VERSION;
 	private Map<String, String> otherHeaders = new HashMap<>();
 	
+	//Constructor
 	public RequestHandler(Map<String,String> otherHeaders){
 		this.otherHeaders = otherHeaders;
 	}
 	
-	
+	//Check whether the requested resources is a valid/accessible path
 	public boolean isValidPath(File file){
 		
 		try{
@@ -46,21 +52,21 @@ public class RequestHandler{
 					return true;
 					}
 				else {
-					logger.error("Forbidden Access; Requested resource cannot be accessed");  
+					logger.error("[Forbidden Access]; Requested resource cannot be accessed");  
 					RESPONSE_CODE = "403";
 					RESPONSE_PHRASE = "Forbidden";
 					return false;
 				}
 			}
 			else {
-				logger.error("File not found; Requested resource does not exist;");
+				logger.error("[File Not Found]; Requested resource does not exist;");
 				RESPONSE_CODE = "404";
 				RESPONSE_PHRASE = "Not Found";
 				return false;
 			}
 				}
 		catch(SecurityException e){
-			logger.error("Forbidden Access; Requested resource cannot be accessed");  
+			logger.error("[Forbidden Access]; Requested resource cannot be accessed");  
 			RESPONSE_CODE = "403";
 			RESPONSE_PHRASE = "Forbidden";
 			return false;
@@ -69,7 +75,8 @@ public class RequestHandler{
 	}
 
 	
-	
+	//Finds the MIME of requested resource
+	// returns null if MIME not supported
 	public String getMimeType(String resourcePath) {
 		Path path = Paths.get(resourcePath);
 		try{
@@ -83,30 +90,67 @@ public class RequestHandler{
 		
 	}
 	
+	//Get the server date
 	public void getServerDate(){
 		
-		SimpleDateFormat sdf =  new SimpleDateFormat("D, dd MMM yyyy HH:mm:ss z");
+		SimpleDateFormat sdf =  new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 		Date currDate = new Date();
 		SERVER_DATE =  sdf.format(currDate);
 	}
 	
+	//Get last modified date of the requested resource
 	public void getLastModified(File file){
 	
-		SimpleDateFormat sdf =  new SimpleDateFormat("D, dd MMM yyyy HH:mm:ss z");
-		TimeZone oldZone = sdf.getTimeZone();
+		SimpleDateFormat sdf =  new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		LAST_MODIFIED =  sdf.format(file.lastModified());
+		try {
+			LAST_MODIFIED =  sdf.parse(sdf.format(file.lastModified()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
+	//Check whether the resource has been modified since the last request
+	public boolean isModified(){
+		Date currentDate = LAST_MODIFIED;
+		Date last_modified;
+		SimpleDateFormat reqsdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+		reqsdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		Calendar calCurr = Calendar.getInstance();
+		Calendar calTimestamp = Calendar.getInstance();
+		calCurr.setTime(currentDate);
+		String formats[] = {"EEEE, dd-MMM-yy HH:mm:ss z","EEE, dd MMM yyyy HH:mm:ss z","EEE MMM dd HH:mm:ss yyyy"};
+		for (String format : formats){
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			try{
+				last_modified = reqsdf.parse(reqsdf.format(sdf.parse(otherHeaders.get("If-Modified-Since"))));
+				calTimestamp.setTime(last_modified);
+				if(calCurr.after(calTimestamp)){
+					//send modified
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+			catch(Exception e){
+				return true;
+			}
+		}
+		return true;
+		
+	}	
 	
-	
+	//Fetch and convert requested resource content into bytes
 	public byte[] getResource(File file){
 		try{
 			FileInputStream fis = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			byte [] byteStream = new byte[(int) file.length()];
 			bis.read(byteStream, 0, byteStream.length);
+			bis.close();
 			RESPONSE_PHRASE = "OK";
 			RESPONSE_CODE = "200";
 			
@@ -128,18 +172,21 @@ public class RequestHandler{
 		}
 	}
 	
+	//Generate response for GET request
 	public void generateGETresponse(){
 		byte[] initialLine = (VERSION + " " + RESPONSE_CODE + " " + RESPONSE_PHRASE+"\r\n").getBytes();
-		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
+		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n\r\n").getBytes();
 		response = concatenateBytes(concatenateBytes(initialLine, headerLine), body);
 	}
 	
+	//Generate response for HEAD request
 	public void generateHEADresponse(){
 		byte[] initialLine = (VERSION + " " + RESPONSE_CODE + " " + RESPONSE_PHRASE+"\r\n").getBytes();
-		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n").getBytes();
+		byte[] headerLine = ("Date: "+ SERVER_DATE + "\r\nContent-Type: " + CONTENT_TYPE + "\r\nContent-Length: " + CONTENT_LENGTH + "\r\nConnection: Close\r\n\r\n").getBytes();
 		response = concatenateBytes(initialLine, headerLine);
 	}
 	
+	//Utility function concatenates byte arrays
 	public byte[] concatenateBytes(byte[] first, byte[] second){
 		byte[] result = new byte[first.length + second.length];
 		System.arraycopy(first, 0, result, 0, first.length);
@@ -147,9 +194,17 @@ public class RequestHandler{
 		return result;
 	}
 	
+	//Set Headers and body for /control request
 	public byte[] buildCONTROLresponse(ThreadPool[] threadPool, String version){
 		VERSION = version;
-		if((response = isBADRequest()) != null){
+		if(!VERSION.equalsIgnoreCase("http/1.1") && !VERSION.equalsIgnoreCase("http/1.0")){
+			logger.error("[ERROR] Invalid HTTP Version");
+			isBADRequest();
+			return response;
+		}
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
+			isBADRequest();
 			return response;
 		}
 		ResponseMessages responseMsgs = new ResponseMessages();
@@ -163,9 +218,17 @@ public class RequestHandler{
 		return response;
 	}
 	
+	//Set Headers and body for /shutdown request
 	public byte[] buildSHUTDOWNresponse(ThreadPool[] threadPool, String version){
 		VERSION = version;
-		if((response = isBADRequest()) != null){
+		if(!VERSION.equalsIgnoreCase("http/1.1") && !VERSION.equalsIgnoreCase("http/1.0")){
+			logger.error("[ERROR] Invalid HTTP Version");
+			isBADRequest();
+			return response;
+		}
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
+			isBADRequest();
 			return response;
 		}
 		ResponseMessages responseMsgs = new ResponseMessages();
@@ -179,8 +242,8 @@ public class RequestHandler{
 		return response;
 	}
 	
-	public byte[] isBADRequest(){
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+	//Sets Headers and body for 400 Bad Request
+	public void isBADRequest(){
 			RESPONSE_CODE = "400";
 			RESPONSE_PHRASE = "Bad Request";
 			CONTENT_TYPE = "text/html; charset=utf-8";
@@ -189,18 +252,34 @@ public class RequestHandler{
 			CONTENT_LENGTH = String.valueOf(body.length);
 			getServerDate();
 			generateGETresponse();
-			return response;
-		}
-		return null;
 	}
+	
+	//Sets Headers and body for all normal GET and HEAD requests
 	public byte[] buildResponse(String path, String version, String action, String url){
 		ACTION = action;
 		VERSION = version;
-		if((response = isBADRequest()) != null){
+		File file = new File(path);
+		ResponseMessages responseMsgs = new ResponseMessages();	
+		if(!VERSION.equalsIgnoreCase("http/1.1") && !VERSION.equalsIgnoreCase("http/1.0")){
+			logger.error("[ERROR] Invalid HTTP Version");
+			isBADRequest();
 			return response;
 		}
-		File file = new File(path);
-		ResponseMessages responseMsgs = new ResponseMessages();
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
+			isBADRequest();
+			return response;
+		}
+		if(otherHeaders.containsKey("If-Modified-Since") && !isModified()){
+			getServerDate();
+			response = (VERSION +" 304 Not Modified\r\n" + SERVER_DATE + "\r\n\r\n").getBytes();
+			return response;
+		}
+		if (otherHeaders.containsKey("If-Unmodified-Since") && isModified()){
+			response = (VERSION +" 412 Pre Condition Failed\r\n\r\n").getBytes();
+			return response;
+		}
+		
 		if (isValidPath(file)){
 			logger.info("Resource path correct");
 			//check if resource is directory 
@@ -224,7 +303,7 @@ public class RequestHandler{
 			}
 			else{
 				CONTENT_TYPE = getMimeType(path)+"; charset=utf-8";
-				//if mime is null, then file format not vlid
+				//if mime is null, then file format not valid
 				if(CONTENT_TYPE == null){
 					RESPONSE_CODE = "404";
 					RESPONSE_PHRASE = "Not Found";
@@ -238,15 +317,17 @@ public class RequestHandler{
 					else if( ACTION.equalsIgnoreCase("HEAD")){
 						generateHEADresponse();
 					}
-				    logger.error("File format not supported");
+				    logger.error("[ERROR] File format not supported");
 				    return response;
 				}
 				else{
+					// a valid file with valid MIME
 					logger.info("Mime type: " + CONTENT_TYPE);
-					body =  concatenateBytes("\r\n".getBytes(),getResource(file));
+					body =  getResource(file);
+					CONTENT_LENGTH = String.valueOf(body.length);
 					getLastModified(file);
 					getServerDate();
-					CONTENT_LENGTH = String.valueOf(body.length);
+					
 					if(body != null){
 						if( ACTION.equalsIgnoreCase("GET")){
 							generateGETresponse();
@@ -268,7 +349,7 @@ public class RequestHandler{
 						else if( ACTION.equalsIgnoreCase("HEAD")){
 							generateHEADresponse();
 						}
-						logger.info("Writing ERROR msg to socket"); 
+						logger.error("[ERROR] Problem reading file"); 
 						return response;
 					}
 				}

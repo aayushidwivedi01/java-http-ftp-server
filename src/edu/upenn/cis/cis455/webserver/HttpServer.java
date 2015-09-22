@@ -41,12 +41,17 @@ class HttpServer {
     	
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
     	if (args.length <= 1){
-    		// Output full name and pennkey
-    		System.out.println("Aayushi Dwivedi\naayushi");
+    		// Output full name and pennkey 
+    		System.out.println("Check number of arguments\nAayushi Dwivedi\naayushi");
     		System.exit(-1);
     	}
     	else if (args.length == 2){
+    		try{
     		portNumber = Integer.parseInt(args[0]);
+    		}
+    		catch(Exception e){
+    			logger.error("Invalid port number", e);
+    		}
     		File file = new File(args[1]);
     		if(file.isDirectory()){
     			generateThreadPool(sharedQueue, args[1]);
@@ -60,7 +65,9 @@ class HttpServer {
       	
       	try{
       		serverSocket = new ServerSocket(portNumber);
-      		//keep listening
+      		/* keep listening while STOP ==false; STOP is a static volatile 
+      		 * of class ThreadPool; STOP is set to true when /shutdown request arrives
+      		 */
       		while(!ThreadPool.getSTOP()){
 			  
       			Socket clientSocket = serverSocket.accept();
@@ -76,17 +83,23 @@ class HttpServer {
 		  
 	  }
 	  catch(Exception e){
+		/**
+		 * Interrupted when socket closed on /shutdown request by a ThreadPool thread
+		 * main() waits for RUNNABLE threads (not interrupted during /shutdown) to join
+		 * before exiting 
+		 */
+		 
 		if(ThreadPool.getSTOP()){
 			for( Thread th : threadPool){
 				try {
 					th.join();
 				} catch (InterruptedException e1) {
-					logger.error("Unable to join thread" + th.getName());
+					logger.error("[ERROR] Unable to join thread" + th.getName());
 				}
 			}
 		}
 		else{
-			logger.error("Interrupt Exception in daemon thread.\n",e);
+			logger.error("[ERROR] Interrupt Exception in daemon thread\n",e);
 			
 		}
 		
