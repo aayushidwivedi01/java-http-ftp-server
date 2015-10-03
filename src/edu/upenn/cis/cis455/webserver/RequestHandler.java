@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,10 +37,10 @@ public class RequestHandler{
 	private Date LAST_MODIFIED;
 	private String ACTION;
 	private String VERSION;
-	private Map<String, String> otherHeaders = new HashMap<>();
+	private Map<String, ArrayList<String>> otherHeaders = new HashMap<>();
 	
 	//Constructor
-	public RequestHandler(Map<String,String> otherHeaders){
+	public RequestHandler(Map<String,ArrayList<String>> otherHeaders){
 		this.otherHeaders = otherHeaders;
 	}
 	
@@ -125,7 +126,7 @@ public class RequestHandler{
 		for (String format : formats){
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			try{
-				last_modified = reqsdf.parse(reqsdf.format(sdf.parse(otherHeaders.get("If-Modified-Since"))));
+				last_modified = reqsdf.parse(reqsdf.format(sdf.parse(otherHeaders.get("If-Modified-Since").get(0))));
 				calTimestamp.setTime(last_modified);
 				if(calCurr.after(calTimestamp)){
 					//send modified

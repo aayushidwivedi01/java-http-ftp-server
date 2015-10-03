@@ -108,6 +108,8 @@ public class TestHarness {
 		}
 		return servlets;
 	}
+	
+	
 
 	private static void usage() {
 		System.err.println("usage: java TestHarness <path to web.xml> " 

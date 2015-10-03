@@ -117040,3 +117040,439 @@ Exiting Thread4
 Exiting Thread2
 Exiting Thread1
 Exiting Thread0
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[ERROR] Interrupt Exception in daemon thread
+
+org.xml.sax.SAXParseException; systemId: file:/home/cis455/git/iws-hw1/./conf/web.xml; lineNumber: 1; columnNumber: 1; Premature end of file.
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:198)
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.fatalError(ErrorHandlerWrapper.java:177)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:441)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:368)
+	at com.sun.org.apache.xerces.internal.impl.XMLScanner.reportFatalError(XMLScanner.java:1437)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:1019)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:648)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:332)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:328)
+	at edu.upenn.cis.cis455.webserver.HttpServer.parseWebdotxml(HttpServer.java:60)
+	at edu.upenn.cis.cis455.webserver.HttpServer.main(HttpServer.java:126)
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[ERROR] Interrupt Exception in daemon thread
+
+java.lang.ClassNotFoundException: edu.upenn.cis455.TestServlet
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:191)
+	at edu.upenn.cis.cis455.webserver.HttpServer.createServlets(HttpServer.java:78)
+	at edu.upenn.cis.cis455.webserver.HttpServer.main(HttpServer.java:129)
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[ERROR] Interrupt Exception in daemon thread
+
+java.lang.ClassNotFoundException: edu.upenn.cis.cis455.testServlet.TestServlet
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:191)
+	at edu.upenn.cis.cis455.webserver.HttpServer.createServlets(HttpServer.java:78)
+	at edu.upenn.cis.cis455.webserver.HttpServer.main(HttpServer.java:129)
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[ERROR] Interrupt Exception in daemon thread
+
+java.lang.ClassNotFoundException: edu.upenn.cis455.testServlet.TestServlet
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:191)
+	at edu.upenn.cis.cis455.webserver.HttpServer.createServlets(HttpServer.java:78)
+	at edu.upenn.cis.cis455.webserver.HttpServer.main(HttpServer.java:129)
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.getServletMatch(ThreadPool.java:90)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:153)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[ERROR] Interrupt Exception in daemon thread
+
+java.net.UnknownHostException: java.sun.com
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:178)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:579)
+	at java.net.Socket.connect(Socket.java:528)
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:180)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:432)
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:527)
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:211)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:308)
+	at sun.net.www.http.HttpClient.New(HttpClient.java:326)
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:997)
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:933)
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:851)
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1301)
+	at com.sun.org.apache.xerces.internal.impl.XMLEntityManager.setupCurrentEntity(XMLEntityManager.java:643)
+	at com.sun.org.apache.xerces.internal.impl.XMLEntityManager.startEntity(XMLEntityManager.java:1297)
+	at com.sun.org.apache.xerces.internal.impl.XMLEntityManager.startDTDEntity(XMLEntityManager.java:1264)
+	at com.sun.org.apache.xerces.internal.impl.XMLDTDScannerImpl.setInputSource(XMLDTDScannerImpl.java:263)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$DTDDriver.dispatch(XMLDocumentScannerImpl.java:1164)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$DTDDriver.next(XMLDocumentScannerImpl.java:1050)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:964)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:648)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:332)
+	at javax.xml.parsers.SAXParser.parse(SAXParser.java:328)
+	at edu.upenn.cis.cis455.webserver.HttpServer.parseWebdotxml(HttpServer.java:65)
+	at edu.upenn.cis.cis455.webserver.HttpServer.main(HttpServer.java:132)
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.getServletMatch(ThreadPool.java:104)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:167)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:174)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:174)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.servlet.Request.getMethod(Request.java:156)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:682)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:179)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.getServletMatch(ThreadPool.java:109)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:168)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.getServletMatch(ThreadPool.java:109)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:169)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+[Output from log4j] sharedQueue empty; No new requests
