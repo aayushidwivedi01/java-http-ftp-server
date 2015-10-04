@@ -10,6 +10,8 @@ public class HttpRequest {
 	static final Logger logger = Logger.getLogger(ThreadPool.class); 
 	public HashMap<String, String> mainRequestHeaders = new HashMap<>(); 
 	public HashMap<String, ArrayList<String>>otherHeaders = new HashMap<>();
+	public HashMap<String, ArrayList<String>> m_params = new HashMap<>();
+
 	private String mainRequest;
 	private int portNo;
 	private ArrayList<String>otherRequests = new ArrayList<String>();
@@ -25,10 +27,10 @@ public class HttpRequest {
 		 
 		 String[] splitRequest = mainRequest.split(" ");
 		 
-		 mainRequestHeaders.put("action", splitRequest[0]);
+		 mainRequestHeaders.put("action", splitRequest[0].trim());
 		 //Check if requested resource is a URL
 		 String serverAdd = "http://localhost:" + String.valueOf(portNo);
-		 String resourcePath = splitRequest[1];
+		 String resourcePath = splitRequest[1].trim();
 		 if (resourcePath.startsWith(serverAdd)){
 			 resourcePath = resourcePath.substring(serverAdd.length());
 			 if ( !resourcePath.startsWith("/")){
@@ -40,7 +42,7 @@ public class HttpRequest {
 			 mainRequestHeaders.put("path", resourcePath);
 		 }
 		 
-		 mainRequestHeaders.put("version", splitRequest[2]);
+		 mainRequestHeaders.put("version", splitRequest[2].trim());
 		 mainRequestHeaders.put("portNo", String.valueOf(portNo));
 
 		
@@ -49,15 +51,33 @@ public class HttpRequest {
 	public void parseOtherHeaders(){
 		for( String req : otherRequests){
 			 String[] pair = req.split(":", 2);
-			 if (!otherHeaders.containsKey(pair[0])){
+			 if (!otherHeaders.containsKey(pair[0].trim())){
 				 ArrayList<String>value = new  ArrayList<String>();
-				 value.add(pair[1]);
-				 otherHeaders.put(pair[0], value);
+				 value.add(pair[1].trim());
+				 otherHeaders.put(pair[0].trim(), value);
 			 }
 			 else{
-				 otherHeaders.get(pair[0]).add(pair[1]);
+				 otherHeaders.get(pair[0].trim()).add(pair[1].trim());
 			 }
 			 
 		 }
+	}
+	
+	public void parseBody(String body) {
+		String[] params = body.split("&");
+		
+		for(String param : params){
+			String[] pair = param.split("=");
+			if(m_params.containsKey(pair[0])){
+				m_params.get(pair[0]).add(pair[1]);
+			}
+			else{
+				ArrayList<String> val = new ArrayList<>();
+				val.add(pair[1]);
+				m_params.put(pair[0], val);
+			}
+			
+		}
+		
 	}
 }

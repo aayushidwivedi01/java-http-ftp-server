@@ -1,7 +1,9 @@
 package edu.upenn.cis.cis455.servlet;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,24 +29,62 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
 	 */
 	
+	
 	private HashMap<String, ArrayList<String>> headers = new HashMap<String, ArrayList<String>>();
-	private int status;
+	public String version;
+	private int status = 200;
 	private Locale locale = null;
 	private String charEncoding = "ISO-8859-1";
 	private int contentLength;
 	private String contentType = "text/html";
 	private int bufferSize = 0;
+	private StringWriter stringWriter;
+	private boolean committed = false;
 
-	
+	private HashMap<Integer, String>statusMsg = new HashMap<>();
 	
 	public void addCookie(Cookie arg0) {
-		// TODO Auto-generated method stub
-
+		String cookieName = arg0.getName();
+		String cookieValue = arg0.getValue();
+		String cookiePath = arg0.getPath();
+		String cookieExpiry = String.valueOf(arg0.getMaxAge());
+		String cookieDomain = arg0.getDomain();
+		String cookieVersion = "HttpOnly";
+		
+		StringBuilder cookieHeader = new StringBuilder();
+		cookieHeader.append(cookieName + " = " + cookieValue + "; ");
+		cookieHeader.append("Max-Age"+ " = " + cookieExpiry + "; ");
+		cookieHeader.append("Path"+ " = " + cookiePath + "; ");
+		cookieHeader.append("Domain"+ " = " + cookieDomain + "; ");
+		cookieHeader.append(cookieVersion);
+		
+		if (headers.containsKey("Set-Cookie")){
+			headers.get("Set-Cookie").add(cookieHeader.toString());
+		}
+		else{
+			ArrayList<String> cookie = new ArrayList<>();
+			cookie.add(cookieHeader.toString());
+			headers.put("Set-Cookie", cookie);
+		}
+		
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.servlet.http.HttpServletResponse#containsHeader(java.lang.String)
-	 */
+	public void setVersion(String version){
+		this.version = version;
+	}
+	
+	public void setStatusMsgMap(){
+		statusMsg.put(200, "OK");
+		statusMsg.put(400, "Bad Request");
+		statusMsg.put(304, "Not Modified");
+		statusMsg.put(412, "Pre Condition Failed");
+		statusMsg.put(404, "Not Found");
+		statusMsg.put(300, "Redirected");
+		statusMsg.put(403, "Forbidden");
+		statusMsg.put(500, "Server Error");
+		statusMsg.put(405, "Method Not Allowed");
+		
+	}
 	public boolean containsHeader(String arg0) {
 		if (headers.containsKey(arg0)){
 			return true;
@@ -221,7 +261,8 @@ public class Response implements HttpServletResponse {
 		return contentType;
 	}
 
-	/* (non-Javadoc)
+	/* NOT REQUIRED
+	 * (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#getOutputStream()
 	 */
 	public ServletOutputStream getOutputStream() throws IOException {
@@ -233,8 +274,10 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#getWriter()
 	 */
 	public PrintWriter getWriter() throws IOException {
-		Socket clientSocket = ThreadPool.getClientSocket();
-		return new PrintWriter(clientSocket.getOutputStream(), true);
+		System.out.println("Getting writer object");
+		stringWriter = new StringWriter(bufferSize);
+		//Socket clientSocket = ThreadPool.getClientSocket();
+		return new ServletWriter(stringWriter, true, this);
 	}
 
 	/* (non-Javadoc)
@@ -249,14 +292,18 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#setContentLength(int)
 	 */
 	public void setContentLength(int arg0) {
+		System.out.println("Setting content length");
 		contentLength = arg0;
+		setIntHeader("Content-Length", contentLength);
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
 	 */
 	public void setContentType(String arg0) {
+		System.out.println("Setting content type");
 		contentType = arg0;
+		setHeader("Content-Type", contentType);
 
 	}
 
@@ -264,7 +311,6 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#setBufferSize(int)
 	 */
 	public void setBufferSize(int arg0) {
-
 		bufferSize = arg0;
 
 	}
@@ -276,11 +322,46 @@ public class Response implements HttpServletResponse {
 		return bufferSize;
 	}
 
+	public StringBuilder getHeaderResponse(){
+		ArrayList<String>vals;
+		StringBuilder headerResponse= new StringBuilder();
+		
+		setStatusMsgMap();
+		String statusStr = statusMsg.get(status);
+		headerResponse.append(version + " " + status + " " + statusStr + "\r\n");
+		
+		for(String key : headers.keySet()){
+			vals = headers.get(key);
+			headerResponse.append(key + " : ");
+			for(int i = 0 ; i < vals.size() ; i++){
+				if (i == 0)
+					headerResponse.append(vals.get(i));
+				else
+					headerResponse.append(", " + vals.get(i));
+			}
+				headerResponse.append("\r\n");
+		}
+		return headerResponse;
+	}
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#flushBuffer()
 	 */
 	public void flushBuffer() throws IOException {
-	
+		if (!committed){
+			Socket clientSocket = ThreadPool.getClientSocket();
+			//add headers to reponse
+			StringBuilder response = getHeaderResponse();
+			response.append("\r\n");
+			OutputStream out = clientSocket.getOutputStream();
+			out.write(response.toString().getBytes());
+			StringBuffer body = stringWriter.getBuffer();
+			out.write(body.toString().getBytes(charEncoding));
+			out.flush();
+			out.close();
+			clientSocket.close();
+			committed = true;
+		}
 
 	}
 
@@ -288,23 +369,25 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#resetBuffer()
 	 */
 	public void resetBuffer() {
-		// TODO Auto-generated method stub
-
+		stringWriter = new StringWriter(bufferSize);
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#isCommitted()
 	 */
 	public boolean isCommitted() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return committed;
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#reset()
 	 */
 	public void reset() {
-		// TODO Auto-generated method stub
+		status = 200; //default value
+		headers.clear();
+		stringWriter = new StringWriter(0);
+		
 
 	}
 
@@ -323,5 +406,7 @@ public class Response implements HttpServletResponse {
 		
 		return locale;
 	}
+	
+	
 
 }

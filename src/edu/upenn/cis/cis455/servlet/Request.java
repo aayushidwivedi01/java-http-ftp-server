@@ -1,6 +1,7 @@
 package edu.upenn.cis.cis455.servlet;
 
 import edu.upenn.cis.cis455.webserver.HttpRequest;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,13 +33,14 @@ import edu.upenn.cis.cis455.webserver.HttpServer;
  * @author Todd J. Green
  */
 public class Request implements HttpServletRequest {
-	private Properties m_params = new Properties();
 	private Properties m_props = new Properties();
 	private Session m_session = null;
 	private String m_method;
 	private String servletPath;
 	private String contentType = "text/html";
 	HashMap<String, String>httpMainHeaders;
+	HashMap<String, ArrayList<String>>m_params = new HashMap<>();;
+
 	HashMap<String, ArrayList<String>>httpOtherHeaders;
 	private String charEncoding = "ISO-8859-1";
 	private Socket clientSocket = null;
@@ -56,6 +58,7 @@ public class Request implements HttpServletRequest {
 	public Request(Session session, HttpRequest httpRequest, String servletPath) {
 		this.httpMainHeaders = httpRequest.mainRequestHeaders;
 		this.httpOtherHeaders = httpRequest.otherHeaders;
+		this.m_params = httpRequest.m_params;
 		this. servletPath = servletPath;
 	}
 	
@@ -71,7 +74,16 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getCookies()
 	 */
 	public Cookie[] getCookies() {
-		// TODO Auto-generated method stub
+		if (httpOtherHeaders.containsKey("Cookie")){
+			String[] cookies = httpOtherHeaders.get("Cookie").get(0).split(";") ;
+			Cookie[] cookieArr = new Cookie[cookies.length];
+			for (int i = 0; i < cookies.length ; i++){
+				String[] cookiePair = cookies[i].split("=");
+				Cookie cookie = new Cookie(cookiePair[0].trim(), cookiePair[1].trim());
+				cookieArr[i] = cookie;
+			}
+			return cookieArr;
+		}
 		return null;
 	}
 
@@ -368,7 +380,9 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getContentLength()
 	 */
 	public int getContentLength() {
-		// TODO Auto-generated method stub
+		if (httpOtherHeaders.containsKey("Content-Length")){
+			return Integer.valueOf(httpOtherHeaders.get("Content-Length").get(0));
+		}
 		return 0;
 	}
 
@@ -376,11 +390,14 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getContentType()
 	 */
 	public String getContentType() {
-		// TODO Auto-generated method stub
+		if (httpOtherHeaders.containsKey("Content-Type")){
+			return httpOtherHeaders.get("Content-Type").get(0);
+		}
 		return contentType;
 	}
 
-	/* (non-Javadoc)
+	/* NOT REQUIRED
+	 * (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getInputStream()
 	 */
 	public ServletInputStream getInputStream() throws IOException {
@@ -388,27 +405,32 @@ public class Request implements HttpServletRequest {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/* 
+	 * (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
 	 */
 	public String getParameter(String arg0) {
-		return m_params.getProperty(arg0);
+		return m_params.get(arg0).get(0);
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getParameterNames()
 	 */
 	public Enumeration getParameterNames() {
-		return m_params.keys();
+		return (Enumeration) m_params.keySet();
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
 	 */
 	public String[] getParameterValues(String arg0) {
-		String[] paramValues;
+		
 		if (m_params.containsKey(arg0)){
-			paramValues = (String[]) m_params.get(arg0);
+			String[] paramValues = new String[m_params.get(arg0).size()];
+			for(int i = 0; i < m_params.get(arg0).size() ; i++){
+				paramValues[i]=  m_params.get(arg0).get(i);
+			}
+			
 			return paramValues;
 		}
 		return null;
@@ -418,8 +440,8 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameterMap()
 	 */
 	public Map getParameterMap() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return m_params;
 	}
 
 	/* (non-Javadoc)
@@ -460,8 +482,6 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getServerPort()
 	 */
 	public int getServerPort() {
-		// TODO Auto-generated method stub
-		
 		return Integer.valueOf(httpMainHeaders.get("portNo"));
 	}
 
@@ -596,7 +616,14 @@ public class Request implements HttpServletRequest {
 	}
 	
 	void setParameter(String key, String value) {
-		m_params.setProperty(key, value);
+		if (m_params.containsKey(key)){
+			m_params.get(key).add(value);
+		}
+		else{
+			ArrayList<String> val = new ArrayList<>();
+			val.add(value);
+			m_params.put(key,  val);
+		}
 	}
 	
 	void clearParameters() {

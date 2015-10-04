@@ -34,6 +34,7 @@ public class ThreadPool extends Thread{
 	private Map<String, String> otherHeaders = new HashMap<>();
 	private HashMap<String, String> httpMainHeaders = new HashMap<>();
 	private HashMap<String, ArrayList<String>> httpOtherHeaders = new HashMap<>();
+	private StringBuilder requestBody = new StringBuilder();
 	private HashMap<String,String> servletMapping = new HashMap<>();
 	private HashMap<String,HttpServlet> servlets = new HashMap<>();
 	private String matchedUrlPattern = null;
@@ -107,10 +108,20 @@ public class ThreadPool extends Thread{
 				urlPattern = urlPattern.split("/\\*", 2)[0];
 			}
 			if (PATH.startsWith(urlPattern) && longestMatch.length() <= urlPattern.length()){
-				flag = true;
-				longestMatch = urlPattern;
+				if ( PATH.length() > urlPattern.length() ){
+					if (PATH.charAt(urlPattern.length()) == '/'){
+					flag = true;
+					longestMatch = urlPattern;
+					}
+				}
+				else {
+
+					flag = true;
+					longestMatch = urlPattern;
+				}
 			}
 		}
+		
 		if (flag)
 			return longestMatch;
 		else 
@@ -147,7 +158,7 @@ public class ThreadPool extends Thread{
 						
 						ArrayList<String>requestContent = new ArrayList();
 						clientSocket = queue.removeFirst();
-					   	OutputStream out = clientSocket.getOutputStream();
+					   	
 						BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 												
 						while((requestMsg = in.readLine()) != null){
@@ -165,104 +176,132 @@ public class ThreadPool extends Thread{
 						  	  requestContent.add(requestMsg);
 							 				  
 						  	}
-						System.out.println("Handling request");
+						if (ACTION.equalsIgnoreCase("POST") ){
+							if (httpOtherHeaders.containsKey("Content-Length") && httpOtherHeaders.containsKey("Content-Type")){
+								char[] cbuf = new char[Integer.valueOf(httpOtherHeaders.get("Content-Length").get(0))];
+								logger.info("Request has a body");
+								
+								//get content length
+								int len = Integer.valueOf(httpOtherHeaders.get("Content-Length").get(0));		
+								//read all the characters in the body
+								in.read(cbuf, 0, len);
+								
+								//convert the body into string
+								for(char c : cbuf){
+									requestBody.append(c);
+								}
+								
+								if (httpOtherHeaders.get("Content-Type").get(0).equalsIgnoreCase("application/x-www-form-urlencoded")){
+									httpRequest.parseBody(requestBody.toString());
+								}
+								
+							}							
+						}
+						
+						else {
+							if (PATH.contains("?")){
+								httpRequest.parseBody(PATH.split("\\?",2)[1]);
+							}
+						}
+						
+						logger.info("Handling request");
 						servletMapping = HttpServer.getServletMapping();
 						servlets = HttpServer.getServlets();
 						String servletPath = getServletMatch(servletMapping);
-						System.out.println("UrlMap: "+ servletMapping.toString());
-						System.out.println("Servlets: "+ servlets.toString());
+
 						
 						if (servletPath != null){
 							Session session = null;
 							Request request = new Request(session, httpRequest, servletPath);
 							Response response = new Response();
+							response.setVersion(VERSION);
+							
 							if ( servletMapping.containsKey(matchedUrlPattern)){
 								String servletName = servletMapping.get(matchedUrlPattern);
-								System.out.println( "Url"+ matchedUrlPattern + " ServletName: "+ servletName);
 								if( servlets.containsKey(servletName)){
-									System.out.println("Matched servlet");
+									logger.info("Found servlet match:"+ servletName);
 									HttpServlet servlet = servlets.get(servletName);
 									servlet.service(request, response);
+									
 
 								}
-							}
+							}	
 							
-							
-							
-							// Call servlet to service the request; Remember to pass servlet path while instatiating Request object
-							
+							continue;
 						}
-//						RequestHandler requestHandler = new RequestHandler(httpOtherHeaders);
-//						byte[] response;
-//						switch(ACTION){
-//							case "GET":
-//								if(PATH.equalsIgnoreCase("/control")){
-//									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
-//										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
-//									}
-//										
-//									URL = "http://localhost:" + String.valueOf(PORT_NO) +PATH;
-//									logger.info("Building CONTROL response");
-//									response = requestHandler.buildCONTROLresponse(threadPool, VERSION);
-//									out.write(response);
-//									logger.info("Done");
-//									out.flush();
-//									out.close();
-//								}
-//								else if (PATH.equalsIgnoreCase("/shutdown")){
-//									
-//									logger.info("Preparing to shutdown the server");
-//									response = requestHandler.buildSHUTDOWNresponse(threadPool, VERSION);
-//									out.write(response);
-//									out.flush();
-//									out.close();
-//									STOP = true;
-//									logger.info("Shutdown initiated by " + Thread.currentThread().getName());
-//									for (Thread th : threadPool){
-//										String state = String.valueOf(th.getState());
-//										if(!state.equalsIgnoreCase("RUNNABLE")){
-//											th.interrupt();
-//										}
-//								
-//									}
-//									HttpServer.getServerSocket().close();
-//									break;
-//								}
-//								else{
-//									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
-//										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
-//									}
-//									URL = "http://localhost:" + PORT_NO +PATH;
-//									String resourcePath = HOME + PATH;
-//									System.out.println(resourcePath);
-//									logger.info("Building response");
-//									response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
-//									out.write(response);
-//									logger.info("Done");
-//									out.flush();
-//									out.close();
-//								}
-//										
-//								break;
-//							case "HEAD":
-//								if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
-//									out.write("HTTP/1.1 100 Continue \r\n".getBytes());
-//								}
-//								URL = "http://localhost:" + PORT_NO +PATH;
-//								String resourcePath = HOME + PATH;
-//								System.out.println(resourcePath);
-//								logger.info("Building response");
-//								response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
-//								out.write(response);
-//								logger.info("Done");
-//								out.flush();
-//								out.close();
-//								break;
-//							case "POST":
-//								System.out.println("Milestone 2");
-//								break;
-//						}
-//							
+						
+						OutputStream out = clientSocket.getOutputStream();
+					
+						RequestHandler requestHandler = new RequestHandler(httpOtherHeaders);
+						byte[] response;
+						switch(ACTION){
+							case "GET":
+								if(PATH.equalsIgnoreCase("/control")){
+									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+									}
+										
+									URL = "http://localhost:" + String.valueOf(PORT_NO) +PATH;
+									logger.info("Building CONTROL response");
+									response = requestHandler.buildCONTROLresponse(threadPool, VERSION);
+									out.write(response);
+									logger.info("Done");
+									out.flush();
+									out.close();
+								}
+								else if (PATH.equalsIgnoreCase("/shutdown")){
+									
+									logger.info("Preparing to shutdown the server");
+									response = requestHandler.buildSHUTDOWNresponse(threadPool, VERSION);
+									out.write(response);
+									out.flush();
+									out.close();
+									STOP = true;
+									logger.info("Shutdown initiated by " + Thread.currentThread().getName());
+									for (Thread th : threadPool){
+										String state = String.valueOf(th.getState());
+										if(!state.equalsIgnoreCase("RUNNABLE")){
+											th.interrupt();
+										}
+								
+									}
+									HttpServer.getServerSocket().close();
+									break;
+								}
+								else{
+									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+									}
+									URL = "http://localhost:" + PORT_NO +PATH;
+									String resourcePath = HOME + PATH;
+									logger.info("Building response");
+									response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
+									out.write(response);
+									logger.info("Done");
+									out.flush();
+									out.close();
+								}
+										
+								break;
+							case "HEAD":
+								if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									out.write("HTTP/1.1 100 Continue \r\n".getBytes());
+								}
+								URL = "http://localhost:" + PORT_NO +PATH;
+								String resourcePath = HOME + PATH;
+								System.out.println(resourcePath);
+								logger.info("Building response");
+								response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
+								out.write(response);
+								logger.info("Done");
+								out.flush();
+								out.close();
+								break;
+							case "POST":
+								System.out.println("Milestone 2");
+								break;
+						}
+							
 								
 					}
 					
