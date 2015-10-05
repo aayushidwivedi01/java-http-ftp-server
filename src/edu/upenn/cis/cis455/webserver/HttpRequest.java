@@ -3,6 +3,8 @@ package edu.upenn.cis.cis455.webserver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.log4j.Logger;
 
 
@@ -11,7 +13,7 @@ public class HttpRequest {
 	public HashMap<String, String> mainRequestHeaders = new HashMap<>(); 
 	public HashMap<String, ArrayList<String>>otherHeaders = new HashMap<>();
 	public HashMap<String, ArrayList<String>> m_params = new HashMap<>();
-
+	public Cookie[] cookieArr;
 	private String mainRequest;
 	private int portNo;
 	private ArrayList<String>otherRequests = new ArrayList<String>();
@@ -79,5 +81,19 @@ public class HttpRequest {
 			
 		}
 		
+	}
+	public void parseCookie(){
+		if (otherHeaders.containsKey("Cookie")){
+			
+			String[] cookies = otherHeaders.get("Cookie").get(0).split(";") ;
+			
+			cookieArr = new Cookie[cookies.length];
+			for (int i = 0; i < cookies.length ; i++){
+				String[] cookiePair = cookies[i].split("=");
+				Cookie cookie = new Cookie(cookiePair[0].trim(), cookiePair[1].trim());
+				cookieArr[i] = cookie;
+			}
+		
+		}
 	}
 }

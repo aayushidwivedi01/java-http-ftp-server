@@ -34,10 +34,11 @@ import edu.upenn.cis.cis455.webserver.HttpServer;
  */
 public class Request implements HttpServletRequest {
 	private Properties m_props = new Properties();
-	private Session m_session = null;
+	private Session m_session;
 	private String m_method;
 	private String servletPath;
 	private String contentType = "text/html";
+	private Cookie[] cookieArr;
 	HashMap<String, String>httpMainHeaders;
 	HashMap<String, ArrayList<String>>m_params = new HashMap<>();;
 
@@ -58,8 +59,10 @@ public class Request implements HttpServletRequest {
 	public Request(Session session, HttpRequest httpRequest, String servletPath) {
 		this.httpMainHeaders = httpRequest.mainRequestHeaders;
 		this.httpOtherHeaders = httpRequest.otherHeaders;
+		this.cookieArr = httpRequest.cookieArr;
 		this.m_params = httpRequest.m_params;
 		this. servletPath = servletPath;
+		this.m_session = session;
 	}
 	
 	/* (non-Javadoc)
@@ -75,13 +78,6 @@ public class Request implements HttpServletRequest {
 	 */
 	public Cookie[] getCookies() {
 		if (httpOtherHeaders.containsKey("Cookie")){
-			String[] cookies = httpOtherHeaders.get("Cookie").get(0).split(";") ;
-			Cookie[] cookieArr = new Cookie[cookies.length];
-			for (int i = 0; i < cookies.length ; i++){
-				String[] cookiePair = cookies[i].split("=");
-				Cookie cookie = new Cookie(cookiePair[0].trim(), cookiePair[1].trim());
-				cookieArr[i] = cookie;
-			}
 			return cookieArr;
 		}
 		return null;
@@ -299,6 +295,10 @@ public class Request implements HttpServletRequest {
 		if (arg0) {
 			if (! hasSession()) {
 				m_session = new Session();
+				//add this session to sessionMap
+				synchronized(HttpServer.getSessionMap()){
+					HttpServer.getSessionMap().put(m_session.getId(), m_session);
+				}
 			}
 		} else {
 			if (! hasSession()) {
@@ -319,7 +319,9 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
 	 */
 	public boolean isRequestedSessionIdValid() {
-		return false;
+		//check if m_session is valid
+		return m_session.isValid();
+		
 	}
 
 	/* (non-Javadoc)

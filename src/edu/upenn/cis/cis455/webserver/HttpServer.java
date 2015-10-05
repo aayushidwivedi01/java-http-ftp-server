@@ -34,6 +34,11 @@ public class HttpServer {
 	private static ServerSocket serverSocket;
 	private static HashMap<String,HttpServlet> servlets;
 	static HashMap<String,String> servletMapping;
+	private static HashMap<String, Session> sessionMap = new HashMap<>();
+	
+	public static HashMap<String, Session> getSessionMap(){
+		return sessionMap;
+	}
 	public static int getPortNumber() {
 		return portNumber;
 	}
@@ -59,8 +64,7 @@ public class HttpServer {
     public static HashMap<String, String> getServletMapping(){
     	return servletMapping;
     }
-    
-   
+     
     
     private static Handler parseWebdotxml(String webdotxml) throws Exception {
 		Handler h = new Handler();
@@ -113,11 +117,6 @@ public class HttpServer {
     		System.out.println("Check number of arguments\nAayushi Dwivedi\naayushi");
 			System.exit(-1);
 		}
-//    	if (args.length <= 1){
-//    		// Output full name and pennkey 
-//    		System.out.println("Check number of arguments\nAayushi Dwivedi\naayushi");
-//    		System.exit(-1);
-//    	}
     	else {
     		try{
     		portNumber = Integer.parseInt(args[0]);
@@ -128,6 +127,9 @@ public class HttpServer {
     		File file = new File(args[1]);
     		if(file.isDirectory()){
     			generateThreadPool(sharedQueue, args[1]);
+    			HeartBeatThread heartBeat = new HeartBeatThread();
+    			heartBeat.setName("Heart Beat");
+    			heartBeat.start();
     		}
     		else{
     			System.out.println("Not a directory;Exiting.");
@@ -141,7 +143,7 @@ public class HttpServer {
     		Context context = createContext(h);
     		servlets = createServlets(h, context);
     		servletMapping = h.m_servletMappings;
-
+    	
       		serverSocket = new ServerSocket(portNumber);
       		/* keep listening while STOP ==false; STOP is a static volatile 
       		 * of class ThreadPool; STOP is set to true when /shutdown request arrives

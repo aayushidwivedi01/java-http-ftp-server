@@ -16,14 +16,26 @@ import javax.servlet.http.HttpSessionContext;
 public class Session implements HttpSession {
 	private long creationTime = 0;
 	private int maxIntervalTime = -1;
+	private long lastAccessedTime = 0;
+	String uuid = null;
+	private Properties m_props = new Properties();
+	private boolean m_valid = true;
 	public Session(){
 		Date date = new Date();
 		creationTime = date.getTime();
+		lastAccessedTime = date.getTime();
+		uuid = UUID.randomUUID().toString();
 		
 	}
 	
-	private Properties m_props = new Properties();
-	private boolean m_valid = true;
+	
+	
+	public int getMaxIntervalTime(){
+		return maxIntervalTime;
+	}
+	public void setLastAccessedTime(long arg0){
+		lastAccessedTime = arg0;
+	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpSession#getCreationTime()
@@ -37,8 +49,6 @@ public class Session implements HttpSession {
 	 * @see javax.servlet.http.HttpSession#getId()
 	 */
 	public String getId() {
-		String uuid = UUID.randomUUID().toString();
-		
 		return uuid;
 	}
 

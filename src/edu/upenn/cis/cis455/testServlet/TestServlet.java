@@ -1,6 +1,7 @@
 package edu.upenn.cis.cis455.testServlet;
 
 import java.io.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -23,8 +24,12 @@ public class TestServlet extends HttpServlet {
 //	    out.println("</body></html>");
 		  
 		 String html = "<html><body> Test Servlet Response</body></html>"; 
+		 System.out.println("Creation time:" + request.getSession(true).getCreationTime());
+		 System.out.println("Session id:" + request.getSession(true).getId());
+		 request.getSession(true).setMaxInactiveInterval(4);
 		 response.setContentType("text/html");
 		 response.setContentLength(html.length());
+		 
 		 PrintWriter out = response.getWriter();
 		 out.println(html);
 		 response.flushBuffer();

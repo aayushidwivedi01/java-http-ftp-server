@@ -18,10 +18,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
@@ -37,6 +39,9 @@ public class ThreadPool extends Thread{
 	private StringBuilder requestBody = new StringBuilder();
 	private HashMap<String,String> servletMapping = new HashMap<>();
 	private HashMap<String,HttpServlet> servlets = new HashMap<>();
+	private String sessionId = null;
+	private HashMap<String,Session> sessionMap;
+
 	private String matchedUrlPattern = null;
 	HttpRequest httpRequest;
 	private String VERSION;
@@ -167,8 +172,10 @@ public class ThreadPool extends Thread{
 								  httpRequest = new HttpRequest(mainRequest, PORT_NO, requestContent);
 								  httpRequest.parseRequestHeaders();
 								  httpRequest.parseOtherHeaders();
+								  httpRequest.parseCookie();
 								  httpMainHeaders = httpRequest.mainRequestHeaders;
 								  httpOtherHeaders = httpRequest.otherHeaders;
+								  
 								  setMainHeaders(httpMainHeaders); 								  
 								  break;
 							  }
@@ -212,9 +219,34 @@ public class ThreadPool extends Thread{
 						
 						if (servletPath != null){
 							Session session = null;
+							//To-Do: look for "sessionId" field in headers and body
+							if (httpOtherHeaders.containsKey("Cookie")){
+								//check if cookieArr contains a key named JSESSIONID
+								for (Cookie cookie : httpRequest.cookieArr){
+									if (cookie.getName().trim().equalsIgnoreCase("JSESSIONID")){
+										sessionId = cookie.getValue();
+										System.out.println("Present in cookieArr:" + sessionId);
+										break;
+									}
+								}
+								//check if this sessionId is already present
+								synchronized(HttpServer.getSessionMap()){
+									//if present set the session id in request object
+									if (HttpServer.getSessionMap().containsKey(sessionId)){
+										session = HttpServer.getSessionMap().get(sessionId);
+										session.setLastAccessedTime(new Date().getTime());
+
+									}
+								}
+									
+							}
+							
+							
 							Request request = new Request(session, httpRequest, servletPath);
 							Response response = new Response();
 							response.setVersion(VERSION);
+							
+							
 							
 							if ( servletMapping.containsKey(matchedUrlPattern)){
 								String servletName = servletMapping.get(matchedUrlPattern);
