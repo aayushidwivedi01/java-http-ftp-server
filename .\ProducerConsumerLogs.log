@@ -120176,3 +120176,741 @@ Handling request
 Found servlet match:TestServlet
 [Output from log4j] sharedQueue empty; No new requests
 [HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.servlet.Response.flushBuffer(Response.java:366)
+	at edu.upenn.cis.cis455.testServlet.TestServlet.doGet(TestServlet.java:35)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:256)
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[File Not Found]; Requested resource does not exist;
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[File Not Found]; Requested resource does not exist;
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[File Not Found]; Requested resource does not exist;
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[File Not Found]; Requested resource does not exist;
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+Resource path correct
+Resource is directory
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.ArrayIndexOutOfBoundsException: 2
+	at edu.upenn.cis.cis455.webserver.HttpRequest.parseRequestHeaders(HttpRequest.java:47)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:173)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Request has a body
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+Handling request
+Found servlet match:TestServlet
+[ERROR] Interrupted thread while processing request
+java.net.SocketException: Broken pipe
+	at java.net.SocketOutputStream.socketWrite0(Native Method)
+	at java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:113)
+	at java.net.SocketOutputStream.write(SocketOutputStream.java:147)
+	at edu.upenn.cis.cis455.servlet.Response.flushBuffer(Response.java:363)
+	at edu.upenn.cis.cis455.testServlet.TestServlet.doGet(TestServlet.java:35)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:256)
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.servlet.Request.getParameter(Request.java:415)
+	at edu.upenn.cis.cis455.testServlet.TestServlet.doGet(TestServlet.java:41)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:256)
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building CONTROL response
+Done
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Preparing to shutdown the server
+Shutdown initiated by Thread1
+Exiting Thread4
+Exiting Thread3
+Exiting Thread2
+Exiting Thread0
+destroying servlet
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Request has a body
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Request has a body
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.ArrayIndexOutOfBoundsException: 2
+	at edu.upenn.cis.cis455.webserver.HttpRequest.parseRequestHeaders(HttpRequest.java:47)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:181)
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[ERROR] Interrupted thread while processing request
+java.lang.NullPointerException
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:194)
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[File Not Found]; Requested resource does not exist;
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Building response
+[ERROR] Host header missing in HTTP/1.1 request
+Done
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[ERROR] Interrupted thread while processing request
+java.lang.ClassCastException: java.util.HashMap$KeySet cannot be cast to java.util.Enumeration
+	at edu.upenn.cis.cis455.servlet.Request.getParameterNames(Request.java:434)
+	at edu.upenn.cis.cis455.testServlet.TestServlet.doGet(TestServlet.java:35)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:270)
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[ERROR] Interrupted thread while processing request
+java.lang.ArrayIndexOutOfBoundsException: 1
+	at edu.upenn.cis.cis455.webserver.HttpRequest.parseRequestHeaders(HttpRequest.java:35)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:181)
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[HEART BEAT]Session expired: Invalidating
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Creating thread pool
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] sharedQueue empty; No new requests
+[Output from log4j] Thread pool ready
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Handling request
+Found servlet match:TestServlet
+Setting content type
+Setting content type
+[Output from log4j] sharedQueue empty; No new requests
+Client socket added to sharedQueue
+[Output from log4j] Processing a request
+[Output from log4j] Parsing request..
+[Output from log4j] Parsing request..
+Request has a body
+[ERROR] Interrupted thread while processing request
+java.lang.ArrayIndexOutOfBoundsException: 1
+	at edu.upenn.cis.cis455.webserver.HttpRequest.parseBody(HttpRequest.java:101)
+	at edu.upenn.cis.cis455.webserver.ThreadPool.run(ThreadPool.java:210)
+[Output from log4j] sharedQueue empty; No new requests

@@ -185,11 +185,13 @@ public class Session implements HttpSession {
 	 * @see javax.servlet.http.HttpSession#isNew()
 	 */
 	public boolean isNew() {
-		// TODO Auto-generated method stub
-		return false;
+		if (lastAccessedTime > creationTime){
+			return false;
+		}
+		return true;
 	}
 
-	boolean isValid() {
+	public boolean isValid() {
 		return m_valid;
 	}
 	

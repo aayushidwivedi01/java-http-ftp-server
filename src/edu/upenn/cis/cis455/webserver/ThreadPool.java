@@ -36,10 +36,10 @@ public class ThreadPool extends Thread{
 	private Map<String, String> otherHeaders = new HashMap<>();
 	private HashMap<String, String> httpMainHeaders = new HashMap<>();
 	private HashMap<String, ArrayList<String>> httpOtherHeaders = new HashMap<>();
-	private StringBuilder requestBody = new StringBuilder();
+	private static StringBuilder requestBody = new StringBuilder();
 	private HashMap<String,String> servletMapping = new HashMap<>();
 	private HashMap<String,HttpServlet> servlets = new HashMap<>();
-	private String sessionId = null;
+	private static String sessionId = null;
 	private HashMap<String,Session> sessionMap;
 
 	private String matchedUrlPattern = null;
@@ -53,9 +53,17 @@ public class ThreadPool extends Thread{
 	private static volatile boolean STOP = false;
 	private static Socket clientSocket;
 	
+	public static String getSessionId(){
+		return sessionId;
+	}
 	
 	public static int getPORT_NO() {
 		return PORT_NO;
+	}
+	
+	public static String getRequestBody(){
+		return requestBody.toString();
+		
 	}
 
 	
@@ -127,8 +135,8 @@ public class ThreadPool extends Thread{
 			}
 		}
 		
-		if (flag)
-			return longestMatch;
+		if (flag){
+			return longestMatch;}
 		else 
 			return null;
 	}
@@ -198,7 +206,7 @@ public class ThreadPool extends Thread{
 									requestBody.append(c);
 								}
 								
-								if (httpOtherHeaders.get("Content-Type").get(0).equalsIgnoreCase("application/x-www-form-urlencoded")){
+								if (httpOtherHeaders.get("Content-Type").get(0).startsWith("application/x-www-form-urlencoded")){
 									httpRequest.parseBody(requestBody.toString());
 								}
 								
@@ -206,8 +214,11 @@ public class ThreadPool extends Thread{
 						}
 						
 						else {
+							
 							if (PATH.contains("?")){
+					
 								httpRequest.parseBody(PATH.split("\\?",2)[1]);
+								PATH = PATH.split("\\?", 2)[0];
 							}
 						}
 						
@@ -216,16 +227,18 @@ public class ThreadPool extends Thread{
 						servlets = HttpServer.getServlets();
 						String servletPath = getServletMatch(servletMapping);
 
-						
+						System.out.println("ServletPAth out:" + servletPath);
+
 						if (servletPath != null){
+							System.out.println("ServletPAth in:" + servletPath);
 							Session session = null;
 							//To-Do: look for "sessionId" field in headers and body
 							if (httpOtherHeaders.containsKey("Cookie")){
-								//check if cookieArr contains a key named JSESSIONID
+								//check if cookieArr contains a key named SESSIONID
 								for (Cookie cookie : httpRequest.cookieArr){
 									if (cookie.getName().trim().equalsIgnoreCase("JSESSIONID")){
 										sessionId = cookie.getValue();
-										System.out.println("Present in cookieArr:" + sessionId);
+										logger.info("Present in cookieArr:" + sessionId);
 										break;
 									}
 								}
@@ -233,8 +246,11 @@ public class ThreadPool extends Thread{
 								synchronized(HttpServer.getSessionMap()){
 									//if present set the session id in request object
 									if (HttpServer.getSessionMap().containsKey(sessionId)){
-										session = HttpServer.getSessionMap().get(sessionId);
-										session.setLastAccessedTime(new Date().getTime());
+										
+										if (HttpServer.getSessionMap().get(sessionId).isValid()){
+											session = HttpServer.getSessionMap().get(sessionId);
+											session.setLastAccessedTime(new Date().getTime());
+										}
 
 									}
 								}
@@ -243,12 +259,10 @@ public class ThreadPool extends Thread{
 							
 							
 							Request request = new Request(session, httpRequest, servletPath);
-							Response response = new Response();
+							Response response = new Response(request);
 							response.setVersion(VERSION);
 							
-							
-							
-							if ( servletMapping.containsKey(matchedUrlPattern)){
+							if (servletMapping.containsKey(matchedUrlPattern)){
 								String servletName = servletMapping.get(matchedUrlPattern);
 								if( servlets.containsKey(servletName)){
 									logger.info("Found servlet match:"+ servletName);
@@ -321,7 +335,6 @@ public class ThreadPool extends Thread{
 								}
 								URL = "http://localhost:" + PORT_NO +PATH;
 								String resourcePath = HOME + PATH;
-								System.out.println(resourcePath);
 								logger.info("Building response");
 								response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
 								out.write(response);

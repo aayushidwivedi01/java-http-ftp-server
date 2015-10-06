@@ -1,9 +1,11 @@
 package edu.upenn.cis.cis455.servlet;
 
 import edu.upenn.cis.cis455.webserver.HttpRequest;
+import edu.upenn.cis.cis455.webserver.ThreadPool;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -254,8 +256,8 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#getRequestedSessionId()
 	 */
 	public String getRequestedSessionId() {
-		// TODO Auto-generated method stub
-		return null;
+	
+		return ThreadPool.getSessionId();
 	}
 
 	/* (non-Javadoc)
@@ -319,8 +321,16 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdValid()
 	 */
 	public boolean isRequestedSessionIdValid() {
-		//check if m_session is valid
-		return m_session.isValid();
+		String sessionId = getRequestedSessionId();
+		 
+		synchronized(HttpServer.getSessionMap()){
+			HashMap<String, Session> map = HttpServer.getSessionMap();
+			if(map.containsKey(sessionId)){
+				return map.get(sessionId).isValid();
+			}
+			else 
+				return false;
+		}
 		
 	}
 
@@ -328,6 +338,8 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.http.HttpServletRequest#isRequestedSessionIdFromCookie()
 	 */
 	public boolean isRequestedSessionIdFromCookie() {
+		if(getRequestedSessionId() != null)
+			return true;
 		return false;
 	}
 
@@ -419,7 +431,7 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getParameterNames()
 	 */
 	public Enumeration getParameterNames() {
-		return (Enumeration) m_params.keySet();
+		return  Collections.enumeration(m_params.keySet());
 	}
 
 	/* (non-Javadoc)
@@ -491,24 +503,34 @@ public class Request implements HttpServletRequest {
 	 * @see javax.servlet.ServletRequest#getReader()
 	 */
 	public BufferedReader getReader() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String body = ThreadPool.getRequestBody();
+		if (body == null){
+			BufferedReader br = new BufferedReader(new StringReader(""));
+			return br;
+		}
+		else {
+			BufferedReader br = new BufferedReader(new StringReader(body));
+			return br;
+		}
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getRemoteAddr()
 	 */
 	public String getRemoteAddr() {
-		
-		return null;
+		Socket clientSocket = ThreadPool.getClientSocket();
+		String clientAddr = clientSocket.getInetAddress().getHostAddress();
+		return clientAddr;
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletRequest#getRemoteHost()
 	 */
 	public String getRemoteHost() {
-		// TODO Auto-generated method stub
-		return null;
+		Socket clientSocket = ThreadPool.getClientSocket();
+		String host = clientSocket.getInetAddress().getCanonicalHostName();
+		return host;
 	}
 
 	/* (non-Javadoc)
@@ -613,11 +635,11 @@ public class Request implements HttpServletRequest {
 		return portNo;
 	}
 
-	void setMethod(String method) {
+	public void setMethod(String method) {
 		m_method = method;
 	}
 	
-	void setParameter(String key, String value) {
+	public void setParameter(String key, String value) {
 		if (m_params.containsKey(key)){
 			m_params.get(key).add(value);
 		}
@@ -628,11 +650,11 @@ public class Request implements HttpServletRequest {
 		}
 	}
 	
-	void clearParameters() {
+	public void clearParameters() {
 		m_params.clear();
 	}
 	
-	boolean hasSession() {
+	public boolean hasSession() {
 		return ((m_session != null) && m_session.isValid());
 	}
 		

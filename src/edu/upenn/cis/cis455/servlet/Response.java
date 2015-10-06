@@ -14,8 +14,12 @@ import java.util.TimeZone;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import edu.upenn.cis.cis455.webserver.ThreadPool;
+
 
 /**
  * @author tjgreen
@@ -24,12 +28,14 @@ import edu.upenn.cis.cis455.webserver.ThreadPool;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Response implements HttpServletResponse {
+	
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServletResponse#addCookie(javax.servlet.http.Cookie)
 	 */
 	
 	
+	static final Logger logger = Logger.getLogger(ThreadPool.class); 
 	private HashMap<String, ArrayList<String>> headers = new HashMap<String, ArrayList<String>>();
 	public String version;
 	private int status = 200;
@@ -40,8 +46,14 @@ public class Response implements HttpServletResponse {
 	private int bufferSize = 0;
 	private StringWriter stringWriter;
 	private boolean committed = false;
+	private String errorMsg = null;
+	private Request request;
 
 	private HashMap<Integer, String>statusMsg = new HashMap<>();
+	
+	public Response(Request request){
+		this.request = request;
+	}
 	
 	public void addCookie(Cookie arg0) {
 		String cookieName = arg0.getName();
@@ -121,11 +133,32 @@ public class Response implements HttpServletResponse {
 		return arg0;
 	}
 
+	
+	public String getERRORhtml(String code, String phrase){
+		String body = ("<html><body><h1>"+ code + " "+ phrase + "</h1></body></html>");
+		return body;
+	}
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServletResponse#sendError(int, java.lang.String)
 	 */
 	public void sendError(int arg0, String arg1) throws IOException {
-		// TODO Auto-generated method stub
+		if(!committed){
+			setStatus(arg0);
+			errorMsg = getERRORhtml(String.valueOf(arg0), arg1);
+			if (stringWriter.getBuffer().length() != 0){
+				resetBuffer();
+			}
+			stringWriter.write(errorMsg);
+			setBufferSize(stringWriter.getBuffer().length());
+			setContentLength(bufferSize);
+			setContentType("text/html");
+			flushBuffer();
+		}
+		else{
+			logger.error("[ERROR]IllegalStateException : Response was committed");
+			throw new IllegalStateException();
+		}
+			
 
 	}
 
@@ -133,8 +166,24 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.http.HttpServletResponse#sendError(int)
 	 */
 	public void sendError(int arg0) throws IOException {
-		// TODO Auto-generated method stub
-
+		if(!committed){
+			if(statusMsg.containsKey(arg0)){
+				setStatus(arg0);
+				errorMsg = getERRORhtml(String.valueOf(arg0), statusMsg.get(arg0) );
+				if (stringWriter.getBuffer().length() != 0){
+					resetBuffer();
+				}
+			stringWriter.write(errorMsg);
+			setBufferSize(stringWriter.getBuffer().length());
+			setContentLength(bufferSize);
+			setContentType("text/html");
+			flushBuffer();
+			}
+		}
+			else{
+				throw new IllegalStateException();
+			}
+				
 	}
 
 	/* (non-Javadoc)
@@ -165,7 +214,6 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.http.HttpServletResponse#addDateHeader(java.lang.String, long)
 	 */
 	public void addDateHeader(String arg0, long arg1) {
-		// TODO Auto-generated method stub
 		if (headers.containsKey(arg0)){
 			headers.get(arg0).add(String.valueOf(arg1));
 		}
@@ -179,14 +227,11 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.http.HttpServletResponse#setHeader(java.lang.String, java.lang.String)
 	 */
 	public void setHeader(String arg0, String arg1) {
-		if (containsHeader(arg0)) {
-			headers.get(arg0).add(0, arg1);
-		}
-		else{
+		
 			ArrayList<String> val = new ArrayList<String>();
 			val.add(arg1);
 			headers.put(arg0, val);
-		}
+		
 
 	}
 
@@ -206,14 +251,11 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.http.HttpServletResponse#setIntHeader(java.lang.String, int)
 	 */
 	public void setIntHeader(String arg0, int arg1) {
-		if (containsHeader(arg0)){
-			headers.get(arg0).add(0, String.valueOf(arg1));
-		}
-		else {
+		
 			ArrayList<String> val = new ArrayList<>();
 			val.add(String.valueOf(arg1));
 			headers.put(arg0, val);
-		}
+		
 
 	}
 
@@ -301,7 +343,7 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
 	 */
 	public void setContentType(String arg0) {
-		System.out.println("Setting content type");
+		logger.info("Setting content type");
 		contentType = arg0;
 		setHeader("Content-Type", contentType);
 
@@ -341,21 +383,39 @@ public class Response implements HttpServletResponse {
 			}
 				headerResponse.append("\r\n");
 		}
+		//if()
 		return headerResponse;
 	}
 	
+	public void setSessionCookie(){
+		HttpSession session = request.getSession(false);
+		if (session != null){
+			Cookie sessionCookie = new Cookie("SESSIONID", request.getSession().getId());
+			sessionCookie.setMaxAge(request.getSession().getMaxInactiveInterval());
+			addCookie(sessionCookie); 
+		}
+		
+	}
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletResponse#flushBuffer()
 	 */
 	public void flushBuffer() throws IOException {
 		if (!committed){
 			Socket clientSocket = ThreadPool.getClientSocket();
-			//add headers to reponse
+			StringBuffer body = stringWriter.getBuffer();
+			
+			//set content length
+			setContentLength(body.length());
+			
+			//set cookie for SESSIONID
+			setSessionCookie();
+			
+			//add headers to response
 			StringBuilder response = getHeaderResponse();
 			response.append("\r\n");
 			OutputStream out = clientSocket.getOutputStream();
 			out.write(response.toString().getBytes());
-			StringBuffer body = stringWriter.getBuffer();
+			
 			out.write(body.toString().getBytes(charEncoding));
 			out.flush();
 			out.close();
@@ -369,7 +429,7 @@ public class Response implements HttpServletResponse {
 	 * @see javax.servlet.ServletResponse#resetBuffer()
 	 */
 	public void resetBuffer() {
-		stringWriter = new StringWriter(bufferSize);
+		stringWriter = new StringWriter(0);
 	}
 
 	/* (non-Javadoc)

@@ -38,9 +38,18 @@ public class HttpRequest {
 			 if ( !resourcePath.startsWith("/")){
 				 resourcePath = "/" + resourcePath;
 			 }
+			 
+			 
 			 mainRequestHeaders.put("path", resourcePath);
 		 }
 		 else {
+//			 if(resourcePath.contains("?")){
+//				 System.out.println("Contains a question");
+//				 String[] pair = resourcePath.split("\\?", 2);
+//				 resourcePath = pair[0];
+//				 parseBody(pair[1]);
+//				 
+//			 }
 			 mainRequestHeaders.put("path", resourcePath);
 		 }
 		 
@@ -66,6 +75,7 @@ public class HttpRequest {
 	}
 	
 	public void parseBody(String body) {
+		if ( body.contains("&")){
 		String[] params = body.split("&");
 		
 		for(String param : params){
@@ -79,7 +89,21 @@ public class HttpRequest {
 				m_params.put(pair[0], val);
 			}
 			
+			}
 		}
+		else{
+			String[] pair = body.split("=");
+			if(m_params.containsKey(pair[0])){
+				m_params.get(pair[0]).add(pair[1]);
+			}
+			else{
+				ArrayList<String> val = new ArrayList<>();
+				val.add(pair[1]);
+				m_params.put(pair[0], val);
+			}
+			
+		}
+		
 		
 	}
 	public void parseCookie(){

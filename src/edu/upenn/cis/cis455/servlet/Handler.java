@@ -9,6 +9,7 @@ public class Handler extends DefaultHandler {
 		private int m_state = 0;
 		private String m_servletName;
 		private String m_paramName;
+		private String m_webAppName = null;
 		public String m_urlPattern;
 		public HashMap<String,String> m_servlets = new HashMap<String,String>();
 		public HashMap<String,String> m_servletMappings = new HashMap<String,String>();
@@ -40,6 +41,9 @@ public class Handler extends DefaultHandler {
 				m_state = 5;
 			} else if (qName.compareTo("url-pattern") == 0) {
 				m_state = (m_state == 6) ? 7 : 41;
+			}
+			else if (qName.compareTo("display-name") == 0){
+				m_state = 50;
 			}
 		}
 		public void characters(char[] ch, int start, int length) {
@@ -82,6 +86,14 @@ public class Handler extends DefaultHandler {
 				m_paramName = null;
 				m_state = 0;
 			} 
+			else if (m_state == 50){
+				m_webAppName = value;
+				m_state = 0;
+			}
+		}
+		
+		public String getWebAppName(){
+			return m_webAppName;
 		}
 		
 }

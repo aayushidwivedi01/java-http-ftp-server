@@ -24,18 +24,21 @@ public class TestServlet extends HttpServlet {
 //	    out.println("</body></html>");
 		  
 		 String html = "<html><body> Test Servlet Response</body></html>"; 
-		 System.out.println("Creation time:" + request.getSession(true).getCreationTime());
-		 System.out.println("Session id:" + request.getSession(true).getId());
-		 request.getSession(true).setMaxInactiveInterval(4);
+//		 System.out.println("Creation time:" + request.getSession(false).getCreationTime());
+//		 System.out.println("Session id:" + request.getSession(true).getId());
+		 //request.getSession(true).setMaxInactiveInterval(4);
 		 response.setContentType("text/html");
 		 response.setContentLength(html.length());
 		 
 		 PrintWriter out = response.getWriter();
-		 out.println(html);
+		 out.write(html);
+		 response.sendError(400, "BAD Request");
+		 //out.println("Parameternames :"+ request.getParameterMap().toString());
 		 response.flushBuffer();
 		 
+		 
 	  }
-	  
+
 	  
 
 	    

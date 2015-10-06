@@ -35,6 +35,7 @@ public class HttpServer {
 	private static HashMap<String,HttpServlet> servlets;
 	static HashMap<String,String> servletMapping;
 	private static HashMap<String, Session> sessionMap = new HashMap<>();
+	private static String webAppName;
 	
 	public static HashMap<String, Session> getSessionMap(){
 		return sessionMap;
@@ -86,12 +87,16 @@ public class HttpServer {
 		}
 		return fc;
 	}
+	public static String getWebAppName(){
+		return webAppName;
+	}
 	
 	private static HashMap<String,HttpServlet> createServlets(Handler h, Context fc) throws Exception {
 		HashMap<String,HttpServlet> servlets = new HashMap<String,HttpServlet>();
 		for (String servletName : h.m_servlets.keySet()) {
 			Config config = new Config(servletName, fc);
 			String className = h.m_servlets.get(servletName);
+			webAppName = h.getWebAppName();
 			Class servletClass = Class.forName(className);
 			HttpServlet servlet = (HttpServlet) servletClass.newInstance();
 			HashMap<String,String> servletParams = h.m_servletParams.get(servletName);
@@ -159,7 +164,7 @@ public class HttpServer {
       				sharedQueue.notify();
       			} 
       		}
-      		System.out.println("Main thread exiting");
+      		logger.info("[INFO] Main thread exiting");
 		  
 	  }
 	  catch(Exception e){
@@ -183,6 +188,10 @@ public class HttpServer {
 			
 		}
 		
+		for (HttpServlet servlet : servlets.values()){
+			servlet.destroy();
+			logger.info("[INFO] Destroying servlet");
+		}
 		System.exit(-1);
 	  }
       
