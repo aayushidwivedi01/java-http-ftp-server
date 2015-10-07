@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 
 public class HttpServer {
 	static final Logger logger = Logger.getLogger(HttpServer.class);
@@ -36,6 +40,12 @@ public class HttpServer {
 	static HashMap<String,String> servletMapping;
 	private static HashMap<String, Session> sessionMap = new HashMap<>();
 	private static String webAppName;
+	private static StringWriter stringWriter;
+	private static HeartBeatThread heartBeat;
+	
+	public static StringWriter getStringWriter(){
+		return stringWriter;
+	}
 	
 	public static HashMap<String, Session> getSessionMap(){
 		return sessionMap;
@@ -71,7 +81,7 @@ public class HttpServer {
 		Handler h = new Handler();
 		File file = new File(webdotxml);
 		if (file.exists() == false) {
-			System.err.println("error: cannot find " + file.getPath());
+			logger.error("[ERROR]error: cannot find " + file.getPath());
 			System.exit(-1);
 		}
 		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
@@ -79,6 +89,12 @@ public class HttpServer {
 		
 		return h;
 	}
+    private static void setupLog4jAppender(){
+    	stringWriter = new StringWriter();
+    	WriterAppender writerAppender = new WriterAppender(new SimpleLayout(), stringWriter);
+    	writerAppender.setThreshold(org.apache.log4j.Level.ERROR);
+    	Logger.getRootLogger().addAppender(writerAppender);
+    }
 	
 	private static Context createContext(Handler h) {
 		Context fc = new Context();
@@ -114,7 +130,10 @@ public class HttpServer {
 	
 
 	public static void main(String args[]){
-    	
+		
+		//setup log4j to collect log errors
+		setupLog4jAppender();
+		
     	LinkedList<Socket> sharedQueue = new LinkedList<>();
     	
     	if (args.length < 3) {
@@ -132,7 +151,7 @@ public class HttpServer {
     		File file = new File(args[1]);
     		if(file.isDirectory()){
     			generateThreadPool(sharedQueue, args[1]);
-    			HeartBeatThread heartBeat = new HeartBeatThread();
+    			heartBeat = new HeartBeatThread();
     			heartBeat.setName("Heart Beat");
     			heartBeat.start();
     		}
@@ -192,6 +211,8 @@ public class HttpServer {
 			servlet.destroy();
 			logger.info("[INFO] Destroying servlet");
 		}
+		heartBeat.interrupt();
+		
 		System.exit(-1);
 	  }
       

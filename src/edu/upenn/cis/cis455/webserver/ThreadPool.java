@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -187,17 +188,17 @@ public class ThreadPool extends Thread{
 								  setMainHeaders(httpMainHeaders); 								  
 								  break;
 							  }
-							  System.out.println(requestMsg);
+							  logger.info("[INFO]"+ requestMsg);
 						  	  requestContent.add(requestMsg);
 							 				  
 						  	}
 						if (ACTION.equalsIgnoreCase("POST") ){
-							if (httpOtherHeaders.containsKey("Content-Length") && httpOtherHeaders.containsKey("Content-Type")){
-								char[] cbuf = new char[Integer.valueOf(httpOtherHeaders.get("Content-Length").get(0))];
+							if (httpOtherHeaders.containsKey("Content-Length".toLowerCase()) && httpOtherHeaders.containsKey("Content-Type")){
+								char[] cbuf = new char[Integer.valueOf(httpOtherHeaders.get("Content-Length".toLowerCase()).get(0))];
 								logger.info("Request has a body");
 								
 								//get content length
-								int len = Integer.valueOf(httpOtherHeaders.get("Content-Length").get(0));		
+								int len = Integer.valueOf(httpOtherHeaders.get("Content-Length".toLowerCase()).get(0));		
 								//read all the characters in the body
 								in.read(cbuf, 0, len);
 								
@@ -206,7 +207,7 @@ public class ThreadPool extends Thread{
 									requestBody.append(c);
 								}
 								
-								if (httpOtherHeaders.get("Content-Type").get(0).startsWith("application/x-www-form-urlencoded")){
+								if (httpOtherHeaders.get("Content-Type".toLowerCase()).get(0).startsWith("application/x-www-form-urlencoded")){
 									httpRequest.parseBody(requestBody.toString());
 								}
 								
@@ -227,13 +228,12 @@ public class ThreadPool extends Thread{
 						servlets = HttpServer.getServlets();
 						String servletPath = getServletMatch(servletMapping);
 
-						System.out.println("ServletPAth out:" + servletPath);
 
 						if (servletPath != null){
 							System.out.println("ServletPAth in:" + servletPath);
 							Session session = null;
 							//To-Do: look for "sessionId" field in headers and body
-							if (httpOtherHeaders.containsKey("Cookie")){
+							if (httpOtherHeaders.containsKey("Cookie".toLowerCase())){
 								//check if cookieArr contains a key named SESSIONID
 								for (Cookie cookie : httpRequest.cookieArr){
 									if (cookie.getName().trim().equalsIgnoreCase("JSESSIONID")){
@@ -266,9 +266,31 @@ public class ThreadPool extends Thread{
 								String servletName = servletMapping.get(matchedUrlPattern);
 								if( servlets.containsKey(servletName)){
 									logger.info("Found servlet match:"+ servletName);
+									
+									if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+										RequestHandler requestHandler = new RequestHandler(VERSION);
+										requestHandler.isBADRequest();
+										byte[] body = requestHandler.response;
+										logger.error("[ERROR] Host header missing in HTTP/1.1 request");
+										OutputStream out = clientSocket.getOutputStream();
+										out.write(body);
+										out.flush();
+										out.close();
+										try{
+											clientSocket.close();
+										}catch(SocketException e){
+											logger.info("[INFO]Closing Client Socket");
+										}
+										continue;
+										
+									}
 									HttpServlet servlet = servlets.get(servletName);
 									servlet.service(request, response);
-									
+									try{
+										clientSocket.close();
+									}catch(SocketException e){
+										logger.info("[INFO]Closing Client Socket");
+									}
 
 								}
 							}	
@@ -283,7 +305,7 @@ public class ThreadPool extends Thread{
 						switch(ACTION){
 							case "GET":
 								if(PATH.equalsIgnoreCase("/control")){
-									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 									}
 										
@@ -294,6 +316,7 @@ public class ThreadPool extends Thread{
 									logger.info("Done");
 									out.flush();
 									out.close();
+									clientSocket.close();
 								}
 								else if (PATH.equalsIgnoreCase("/shutdown")){
 									
@@ -302,6 +325,7 @@ public class ThreadPool extends Thread{
 									out.write(response);
 									out.flush();
 									out.close();
+									clientSocket.close();
 									STOP = true;
 									logger.info("Shutdown initiated by " + Thread.currentThread().getName());
 									for (Thread th : threadPool){
@@ -315,7 +339,7 @@ public class ThreadPool extends Thread{
 									break;
 								}
 								else{
-									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 									}
 									URL = "http://localhost:" + PORT_NO +PATH;
@@ -326,11 +350,12 @@ public class ThreadPool extends Thread{
 									logger.info("Done");
 									out.flush();
 									out.close();
+									clientSocket.close();
 								}
 										
 								break;
 							case "HEAD":
-								if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+								if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 									out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 								}
 								URL = "http://localhost:" + PORT_NO +PATH;
@@ -341,6 +366,8 @@ public class ThreadPool extends Thread{
 								logger.info("Done");
 								out.flush();
 								out.close();
+								clientSocket.close();
+								clientSocket.close();
 								break;
 							case "POST":
 								System.out.println("Milestone 2");

@@ -5,6 +5,11 @@ package edu.upenn.cis.cis455.webserver;
  */
 
 import java.io.File;
+import java.io.StringWriter;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 
 public class ResponseMessages {
 	
@@ -34,6 +39,8 @@ public class ResponseMessages {
 	public byte[] getCONTROLhtml(ThreadPool[] threadPool){
 		byte[] body;
 		String thState;
+		
+		StringWriter errorLog = HttpServer.getStringWriter();
 		String content = "<html>\n<body> <h1> Control Panel </h1> <h2> Aayushi Dwivedi</h2> <h2> aayushi </h2><p>";
 		for (ThreadPool thName : threadPool){
 			content = content + thName.getName() ;
@@ -45,7 +52,10 @@ public class ResponseMessages {
 				content = content + " " + thState + "</br>";
 			}
 		}
-		body = (content+ "</p><p><a href=\"http://localhost:" +ThreadPool.getPORT_NO()+"/shutdown \"> SHUTDOWN SERVER</a></body></html>").getBytes();
+		body = (content+ "</p><p><a href=\"http://localhost:" +ThreadPool.getPORT_NO()+"/shutdown \"> SHUTDOWN SERVER</a><p>" +errorLog.toString()+"</p></body></html>").getBytes();
+		
+	
+		
 		return body;
 	}
 	

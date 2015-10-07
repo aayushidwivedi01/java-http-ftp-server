@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class RequestHandler{
 	static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private byte[] body;
-	private byte[] response;
+	public byte[] response;
 	private String RESPONSE_CODE;
 	private String RESPONSE_PHRASE;
 	private String CONTENT_TYPE;
@@ -36,12 +37,17 @@ public class RequestHandler{
 	private Date LAST_MODIFIED;
 	private String ACTION;
 	private String VERSION;
-	private Map<String, String> otherHeaders = new HashMap<>();
+	private Map<String, ArrayList<String>> otherHeaders = new HashMap<>();
 	
-	//Constructor
-	public RequestHandler(Map<String,String> otherHeaders){
+	//Main Constructor
+	public RequestHandler(Map<String,ArrayList<String>> otherHeaders){
 		this.otherHeaders = otherHeaders;
 	}
+	
+	public RequestHandler(String version){
+		VERSION = version;
+	}
+   
 	
 	//Check whether the requested resources is a valid/accessible path
 	public boolean isValidPath(File file){
@@ -125,7 +131,7 @@ public class RequestHandler{
 		for (String format : formats){
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			try{
-				last_modified = reqsdf.parse(reqsdf.format(sdf.parse(otherHeaders.get("If-Modified-Since"))));
+				last_modified = reqsdf.parse(reqsdf.format(sdf.parse(otherHeaders.get("If-Modified-Since").get(0))));
 				calTimestamp.setTime(last_modified);
 				if(calCurr.after(calTimestamp)){
 					//send modified
@@ -197,12 +203,13 @@ public class RequestHandler{
 	//Set Headers and body for /control request
 	public byte[] buildCONTROLresponse(ThreadPool[] threadPool, String version){
 		VERSION = version;
+		
 		if(!VERSION.equalsIgnoreCase("http/1.1") && !VERSION.equalsIgnoreCase("http/1.0")){
 			logger.error("[ERROR] Invalid HTTP Version");
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
@@ -226,7 +233,7 @@ public class RequestHandler{
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
@@ -265,17 +272,17 @@ public class RequestHandler{
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
 		}
-		if(otherHeaders.containsKey("If-Modified-Since") && !isModified()){
+		if(otherHeaders.containsKey("If-Modified-Since".toLowerCase()) && !isModified()){
 			getServerDate();
 			response = (VERSION +" 304 Not Modified\r\n" + SERVER_DATE + "\r\n\r\n").getBytes();
 			return response;
 		}
-		if (otherHeaders.containsKey("If-Unmodified-Since") && isModified()){
+		if (otherHeaders.containsKey("If-Unmodified-Since".toLowerCase()) && isModified()){
 			response = (VERSION +" 412 Pre Condition Failed\r\n\r\n").getBytes();
 			return response;
 		}

@@ -8,15 +8,24 @@ package edu.upenn.cis.cis455.webserver;
  * @param threadPool object reference
  * @param port number the server is listening at
  */
+import edu.upenn.cis.cis455.servlet.Request;
+import edu.upenn.cis.cis455.servlet.Response;
+import edu.upenn.cis.cis455.servlet.Context;
+import edu.upenn.cis.cis455.servlet.Session;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
@@ -26,6 +35,16 @@ public class ThreadPool extends Thread{
 	private LinkedList<Socket>queue;
 	private final String HOME;
 	private Map<String, String> otherHeaders = new HashMap<>();
+	private HashMap<String, String> httpMainHeaders = new HashMap<>();
+	private HashMap<String, ArrayList<String>> httpOtherHeaders = new HashMap<>();
+	private static StringBuilder requestBody = new StringBuilder();
+	private HashMap<String,String> servletMapping = new HashMap<>();
+	private HashMap<String,HttpServlet> servlets = new HashMap<>();
+	private static String sessionId = null;
+	private HashMap<String,Session> sessionMap;
+
+	private String matchedUrlPattern = null;
+	HttpRequest httpRequest;
 	private String VERSION;
 	private String ACTION;
 	private String PATH;
@@ -33,26 +52,45 @@ public class ThreadPool extends Thread{
 	private String URL;
 	private static int PORT_NO;
 	private static volatile boolean STOP = false;
+	private static Socket clientSocket;
 	
+	public static String getSessionId(){
+		return sessionId;
+	}
 	
 	public static int getPORT_NO() {
 		return PORT_NO;
 	}
+	
+	public static String getRequestBody(){
+		return requestBody.toString();
+		
+	}
 
-	public ThreadPool(LinkedList<Socket>queue, String home, ThreadPool[] threadPool, int portNo ){
+	
+	public ThreadPool(LinkedList<Socket>queue, String home, ThreadPool[] threadPool){
 		this.queue = queue;
 		this.threadPool = threadPool;
 		HOME = home;
-		PORT_NO = portNo;
+		PORT_NO = HttpServer.getPortNumber();
 		URL = "http://localhost:" + String.valueOf(PORT_NO) + "URLNotFormedYet";
 		
+		this.servletMapping = HttpServer.servletMapping;
 	}
 	
-public String getURL() {
+	public String getURL() {
 		return URL;
 	}
-public static boolean getSTOP(){	
+	public static boolean getSTOP(){	
 		return STOP;
+	}
+
+	public void setServlets(){
+		servlets = HttpServer.getServlets();
+	}
+	
+	public static Socket getClientSocket(){
+		return clientSocket;
 	}
 /**
  	[GET /hello HTTP/1.1, 
@@ -66,27 +104,43 @@ public static boolean getSTOP(){
 
 	  
 	
-	private  void parseRequestHeaders(String mainRequest, ArrayList<String> otherRequests){
+	private  void setMainHeaders(HashMap<String, String> mainRequest){
 		 logger.info("[Output from log4j] Parsing request..");
-		  
-		 String[] splitRequest = mainRequest.split(" ");
 		 
-		 ACTION = splitRequest[0];
-		 PATH = splitRequest[1];
-		 VERSION =  splitRequest[2];
-		 
-		 
-		 for( String req : otherRequests){
-			 String[] pair = req.split(":", 2);
-			 
-			 otherHeaders.put(pair[0], pair[1]);
-		 }
-		 System.out.println(otherHeaders);
-		 
-		 
+		 ACTION = mainRequest.get("action");
+		 PATH = mainRequest.get("path");
+		 VERSION =  mainRequest.get("version");	 
 		 
 	 }	
 	
+	private String getServletMatch(HashMap<String, String> servletMapping){
+		String longestMatch = "";
+		boolean flag = false;
+		for(String urlPattern : servletMapping.keySet()){
+			matchedUrlPattern = urlPattern;
+			if (urlPattern.contains("*")){
+				urlPattern = urlPattern.split("/\\*", 2)[0];
+			}
+			if (PATH.startsWith(urlPattern) && longestMatch.length() <= urlPattern.length()){
+				if ( PATH.length() > urlPattern.length() ){
+					if (PATH.charAt(urlPattern.length()) == '/'){
+					flag = true;
+					longestMatch = urlPattern;
+					}
+				}
+				else {
+
+					flag = true;
+					longestMatch = urlPattern;
+				}
+			}
+		}
+		
+		if (flag){
+			return longestMatch;}
+		else 
+			return null;
+	}
 
 	
 	
@@ -114,32 +168,144 @@ public static boolean getSTOP(){
 				else{
 					try{
 						logger.info("[Output from log4j] Processing a request");
-						String request;
-						byte[] response;
-						ArrayList<String>requestContent = new ArrayList();
+						String requestMsg;
 						
-						Socket clientSocket = queue.removeFirst();
-					   	OutputStream out = clientSocket.getOutputStream();
+						ArrayList<String>requestContent = new ArrayList();
+						clientSocket = queue.removeFirst();
+					   	
 						BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 												
-						while((request = in.readLine()) != null){
-							  if(request.length() == 0){
+						while((requestMsg = in.readLine()) != null){
+							  if(requestMsg.length() == 0){
 								  String mainRequest = requestContent.remove(0);
-								  parseRequestHeaders(mainRequest, requestContent);
+								  httpRequest = new HttpRequest(mainRequest, PORT_NO, requestContent);
+								  httpRequest.parseRequestHeaders();
+								  httpRequest.parseOtherHeaders();
+								  httpRequest.parseCookie();
+								  httpMainHeaders = httpRequest.mainRequestHeaders;
+								  httpOtherHeaders = httpRequest.otherHeaders;
+								  
+								  setMainHeaders(httpMainHeaders); 								  
 								  break;
 							  }
-							  System.out.println(request);
-						  	  requestContent.add(request);
+							  logger.info("[INFO]"+ requestMsg);
+						  	  requestContent.add(requestMsg);
 							 				  
 						  	}
-						System.out.println("Handling request");
+						if (ACTION.equalsIgnoreCase("POST") ){
+							if (httpOtherHeaders.containsKey("Content-Length".toLowerCase()) && httpOtherHeaders.containsKey("Content-Type")){
+								char[] cbuf = new char[Integer.valueOf(httpOtherHeaders.get("Content-Length".toLowerCase()).get(0))];
+								logger.info("Request has a body");
+								
+								//get content length
+								int len = Integer.valueOf(httpOtherHeaders.get("Content-Length".toLowerCase()).get(0));		
+								//read all the characters in the body
+								in.read(cbuf, 0, len);
+								
+								//convert the body into string
+								for(char c : cbuf){
+									requestBody.append(c);
+								}
+								
+								if (httpOtherHeaders.get("Content-Type".toLowerCase()).get(0).startsWith("application/x-www-form-urlencoded")){
+									httpRequest.parseBody(requestBody.toString());
+								}
+								
+							}							
+						}
 						
-						RequestHandler requestHandler = new RequestHandler(otherHeaders);
+						else {
+							
+							if (PATH.contains("?")){
+					
+								httpRequest.parseBody(PATH.split("\\?",2)[1]);
+								PATH = PATH.split("\\?", 2)[0];
+							}
+						}
 						
+						logger.info("Handling request");
+						servletMapping = HttpServer.getServletMapping();
+						servlets = HttpServer.getServlets();
+						String servletPath = getServletMatch(servletMapping);
+
+
+						if (servletPath != null){
+							System.out.println("ServletPAth in:" + servletPath);
+							Session session = null;
+							//To-Do: look for "sessionId" field in headers and body
+							if (httpOtherHeaders.containsKey("Cookie".toLowerCase())){
+								//check if cookieArr contains a key named SESSIONID
+								for (Cookie cookie : httpRequest.cookieArr){
+									if (cookie.getName().trim().equalsIgnoreCase("JSESSIONID")){
+										sessionId = cookie.getValue();
+										logger.info("Present in cookieArr:" + sessionId);
+										break;
+									}
+								}
+								//check if this sessionId is already present
+								synchronized(HttpServer.getSessionMap()){
+									//if present set the session id in request object
+									if (HttpServer.getSessionMap().containsKey(sessionId)){
+										
+										if (HttpServer.getSessionMap().get(sessionId).isValid()){
+											session = HttpServer.getSessionMap().get(sessionId);
+											session.setLastAccessedTime(new Date().getTime());
+										}
+
+									}
+								}
+									
+							}
+							
+							
+							Request request = new Request(session, httpRequest, servletPath);
+							Response response = new Response(request);
+							response.setVersion(VERSION);
+							
+							if (servletMapping.containsKey(matchedUrlPattern)){
+								String servletName = servletMapping.get(matchedUrlPattern);
+								if( servlets.containsKey(servletName)){
+									logger.info("Found servlet match:"+ servletName);
+									
+									if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+										RequestHandler requestHandler = new RequestHandler(VERSION);
+										requestHandler.isBADRequest();
+										byte[] body = requestHandler.response;
+										logger.error("[ERROR] Host header missing in HTTP/1.1 request");
+										OutputStream out = clientSocket.getOutputStream();
+										out.write(body);
+										out.flush();
+										out.close();
+										try{
+											clientSocket.close();
+										}catch(SocketException e){
+											logger.info("[INFO]Closing Client Socket");
+										}
+										continue;
+										
+									}
+									HttpServlet servlet = servlets.get(servletName);
+									servlet.service(request, response);
+									try{
+										clientSocket.close();
+									}catch(SocketException e){
+										logger.info("[INFO]Closing Client Socket");
+									}
+
+								}
+							}	
+							
+							continue;
+						}
+						
+						OutputStream out = clientSocket.getOutputStream();
+					
+						RequestHandler requestHandler = new RequestHandler(httpOtherHeaders);
+						byte[] response;
 						switch(ACTION){
 							case "GET":
 								if(PATH.equalsIgnoreCase("/control")){
-									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 									}
 										
@@ -150,6 +316,7 @@ public static boolean getSTOP(){
 									logger.info("Done");
 									out.flush();
 									out.close();
+									clientSocket.close();
 								}
 								else if (PATH.equalsIgnoreCase("/shutdown")){
 									
@@ -158,6 +325,7 @@ public static boolean getSTOP(){
 									out.write(response);
 									out.flush();
 									out.close();
+									clientSocket.close();
 									STOP = true;
 									logger.info("Shutdown initiated by " + Thread.currentThread().getName());
 									for (Thread th : threadPool){
@@ -171,34 +339,35 @@ public static boolean getSTOP(){
 									break;
 								}
 								else{
-									if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+									if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 										out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 									}
 									URL = "http://localhost:" + PORT_NO +PATH;
 									String resourcePath = HOME + PATH;
-									System.out.println(resourcePath);
 									logger.info("Building response");
 									response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
 									out.write(response);
 									logger.info("Done");
 									out.flush();
 									out.close();
+									clientSocket.close();
 								}
 										
 								break;
 							case "HEAD":
-								if (otherHeaders.containsKey("Expect") && VERSION.equalsIgnoreCase("http/1.1")){
+								if (otherHeaders.containsKey("Expect".toLowerCase()) && VERSION.equalsIgnoreCase("http/1.1")){
 									out.write("HTTP/1.1 100 Continue \r\n".getBytes());
 								}
 								URL = "http://localhost:" + PORT_NO +PATH;
 								String resourcePath = HOME + PATH;
-								System.out.println(resourcePath);
 								logger.info("Building response");
 								response = requestHandler.buildResponse(resourcePath, VERSION, ACTION, URL);
 								out.write(response);
 								logger.info("Done");
 								out.flush();
 								out.close();
+								clientSocket.close();
+								clientSocket.close();
 								break;
 							case "POST":
 								System.out.println("Milestone 2");

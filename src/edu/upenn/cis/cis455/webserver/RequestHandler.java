@@ -28,7 +28,7 @@ public class RequestHandler{
 	static final Logger logger = Logger.getLogger(RequestHandler.class);
 
 	private byte[] body;
-	private byte[] response;
+	public byte[] response;
 	private String RESPONSE_CODE;
 	private String RESPONSE_PHRASE;
 	private String CONTENT_TYPE;
@@ -39,10 +39,15 @@ public class RequestHandler{
 	private String VERSION;
 	private Map<String, ArrayList<String>> otherHeaders = new HashMap<>();
 	
-	//Constructor
+	//Main Constructor
 	public RequestHandler(Map<String,ArrayList<String>> otherHeaders){
 		this.otherHeaders = otherHeaders;
 	}
+	
+	public RequestHandler(String version){
+		VERSION = version;
+	}
+   
 	
 	//Check whether the requested resources is a valid/accessible path
 	public boolean isValidPath(File file){
@@ -198,12 +203,13 @@ public class RequestHandler{
 	//Set Headers and body for /control request
 	public byte[] buildCONTROLresponse(ThreadPool[] threadPool, String version){
 		VERSION = version;
+		
 		if(!VERSION.equalsIgnoreCase("http/1.1") && !VERSION.equalsIgnoreCase("http/1.0")){
 			logger.error("[ERROR] Invalid HTTP Version");
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
@@ -227,7 +233,7 @@ public class RequestHandler{
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
@@ -266,17 +272,17 @@ public class RequestHandler{
 			isBADRequest();
 			return response;
 		}
-		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host")){
+		if(VERSION.equalsIgnoreCase("http/1.1") && !otherHeaders.containsKey("Host".toLowerCase())){
 			logger.error("[ERROR] Host header missing in HTTP/1.1 request");
 			isBADRequest();
 			return response;
 		}
-		if(otherHeaders.containsKey("If-Modified-Since") && !isModified()){
+		if(otherHeaders.containsKey("If-Modified-Since".toLowerCase()) && !isModified()){
 			getServerDate();
 			response = (VERSION +" 304 Not Modified\r\n" + SERVER_DATE + "\r\n\r\n").getBytes();
 			return response;
 		}
-		if (otherHeaders.containsKey("If-Unmodified-Since") && isModified()){
+		if (otherHeaders.containsKey("If-Unmodified-Since".toLowerCase()) && isModified()){
 			response = (VERSION +" 412 Pre Condition Failed\r\n\r\n").getBytes();
 			return response;
 		}
